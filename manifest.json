@@ -20,7 +20,9 @@
   ],
   "permissions": [
     "activeTab",
-    "https://ajax.googleapis.com/"
+    "notifications",
+    "alarms",
+    "http://*/*"
   ],
   "devtools_page": "devtools/devtools.html"
 }

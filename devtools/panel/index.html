@@ -4,48 +4,66 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewpoint">
     <meta content="telephone=no" name="format-detection">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <script src="assets/js/jquery-3.1.1.min.js"></script>
+
     <link rel="stylesheet" href="assets/bungo.css">
+    <script src="assets/bungo.js"></script>
+    
+    <script>
+    window.onload = function(){
+      show_div('res_info');
+    }
+    </script>
   </head>
   <body>
-    <ul class="top">
-      <li>炼金术师<b>USERNAME</b></b></li>
-      <li>Lv.<b>USER LEVEL</b></li>
-      <li>墨汁<b>NUM1</b></li>
-      <li>饭团<b>NUM1</b></li>
-      <li>有魂书<b>NUM1</b></li>
-      <li>加速机<b>NUM1</b></li>
-      <li class="ad"><a href="http://weibo.com/2bdenny" target="_blank">向凌大大致敬</a></li>
-    </ul>
-    <ul class="nav">
-      <li>队伍</li>
-    </ul>
     <div class="container">
-      <!-- 一个队伍 -->
-      <div id="team">
-        <table>
+      <div>
+        Hello, <b>USERNAME</b>!
+      </div>
+      <ol class="breadcrumb">
+        <li onclick="show_div('res_info');">资源信息</li>
+        <li onclick="show_div('team_info');">队伍信息</li>
+        <li onclick="show_div('log_info');">掉落记录</li>
+      </ol>
+
+      <!-- 这个是资源信息 -->
+      <div id="res_info">
+        <table class="table">
           <tr>
-            <td>位置[武器]</td>
-            <td>人名[贤者之石]</td>
-            <td>LV.?[NEXT ?]</td>
+            <td>炼金术师</td>
+            <td><b>USERNAME</b></td>
           </tr>
           <tr>
-            <td>侵蚀 ?</td>
-            <td>满腹度 ?</td>
-            <td>精神 ?</td>
+            <td>Lv.</td>
+            <td><b>USER LEVEL</b></td>
           </tr>
           <tr>
-            <td>攻击 ?</td>
-            <td>防御 ?</td>
-            <td>回避 ?</td>
-          </tr>
+            <td>墨汁</td><td><b>NUM1</b></td></tr>
           <tr>
-            <td>技术 ?</td>
-            <td>天才 ?</td>
-            <td>美 ?</td>
-            <td>主题 ?</td>
-            <td>真实 ?</td>
-          </tr>
+            <td>饭团</td><td><b>NUM1</b></td></tr>
+          <tr>
+            <td>有魂书</td><td><b>NUM1</b></td></tr>
+          <tr>
+            <td>加速机</td><td><b>NUM1</b></td></tr>
+          <!-- <li class="ad"><a href="http://weibo.com/2bdenny" target="_blank">向凌大大致敬</a></li> -->
         </table>
+      </div>
+
+      <!-- 这个是队伍信息 -->
+      <div id="team_info">
+        现在没有队伍
+      </div>
+
+      <!-- 这个是掉落信息 -->
+      <div id="log_info">
+        现在没有掉落
       </div>
     </div>
   </body>
