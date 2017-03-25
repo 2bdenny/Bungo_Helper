@@ -5,3 +5,5 @@
 
 ### TODO
 - 显示炼金术师资源信息
+  - <del>获取request的url</del>
+  - 获取response的content
