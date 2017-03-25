@@ -15,12 +15,6 @@
 
     <link rel="stylesheet" href="assets/bungo.css">
     <script src="assets/bungo.js"></script>
-    
-    <script>
-    window.onload = function(){
-      show_div('res_info');
-    }
-    </script>
   </head>
   <body>
     <div class="container">
@@ -28,9 +22,9 @@
         Hello, <b>USERNAME</b>!
       </div>
       <ol class="breadcrumb">
-        <li onclick="show_div('res_info');">资源信息</li>
-        <li onclick="show_div('team_info');">队伍信息</li>
-        <li onclick="show_div('log_info');">掉落记录</li>
+        <li id="btn_res_info">资源信息</li>
+        <li id="btn_team_info">队伍信息</li>
+        <li id="btn_log_info">掉落记录</li>
       </ol>
 
       <!-- 这个是资源信息 -->
