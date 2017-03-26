@@ -15,13 +15,15 @@
 
     <link rel="stylesheet" href="assets/bungo.css">
     <script src="assets/bungo.js"></script>
-    <script src="app/route.js"></script>
+    <!-- <script src="app/route.js"></script> -->
+    <!-- <script>
+    window.onload = function() {
+      $("#name").html("hello");
+    }
+    </script> -->
   </head>
   <body>
     <div class="container">
-      <div>
-        Hello, <b>USERNAME</b>!
-      </div>
       <ol class="breadcrumb">
         <li id="btn_res_info">资源信息</li>
         <li id="btn_team_info">队伍信息</li>
@@ -30,28 +32,28 @@
 <div id="test">
   url
 </div>
-<div id="response_content">
-  content
+<div id="tip">
+
 </div>
       <!-- 这个是资源信息 -->
       <div id="res_info">
         <table class="table">
           <tr>
             <td>炼金术师</td>
-            <td><b>USERNAME</b></td>
+            <td id="name">USERNAME</td>
           </tr>
           <tr>
             <td>Lv.</td>
-            <td><b>USER LEVEL</b></td>
+            <td id="level">USER LEVEL</td>
           </tr>
           <tr>
-            <td>墨汁</td><td><b>NUM1</b></td></tr>
+            <td>墨汁</td><td id="res_ink">NUM1</td></tr>
           <tr>
-            <td>饭团</td><td><b>NUM1</b></td></tr>
+            <td>饭团</td><td id="res_food">NUM1</td></tr>
           <tr>
-            <td>有魂书</td><td><b>NUM1</b></td></tr>
+            <td>有魂书</td><td id="item_book">NUM1</td></tr>
           <tr>
-            <td>加速机</td><td><b>NUM1</b></td></tr>
+            <td>加速机</td><td id="item_quick">NUM1</td></tr>
           <!-- <li class="ad"><a href="http://weibo.com/2bdenny" target="_blank">向凌大大致敬</a></li> -->
         </table>
       </div>

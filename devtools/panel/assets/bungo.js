@@ -13,9 +13,14 @@ window.onload = function() {
 
   /* dispatch data */
   chrome.devtools.network.onRequestFinished.addListener(function(request){
-    console.log(request);
-    show_url(request.request.url);
-    show_content(request);
+    var url = request.request.url;
+    if (/.*mypage$/g.test(url)) {
+      $('#test').html(url);
+      request.getContent(function(content, encoding) {
+        var con = JSON.parse(content);
+        show_data(con);
+      });
+    }
   });
 }
 
@@ -28,15 +33,16 @@ function show_div(div_id){
 }
 
 /* dispatch data here */
-function show_url(url){
-  $("#test").html(url);
-}
-
-function show_content(request){
-  if (/.*mypage/g.test(request.request.url)) {
-    var content = request.getContent(function(content, encoding){
-      // TODO get content of response
-    });
-    $("#response_content").html(content);
+function show_data(con){
+  if (con) {
+    $('#tip').html();
+    $('#name').html(con.header.name);
+    $('#level').html(con.header.level);
+    $('#res_ink').html(con.header.res_ink);
+    $('#res_food').html(con.header.res_food);
+    $('#item_book').html(con.header.item_book);
+    $('#item_quick').html(con.header.item_quick);
+  } else {
+    $('#tip').html("回到首页可以看到信息");
   }
 }
