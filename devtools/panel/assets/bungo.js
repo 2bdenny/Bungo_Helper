@@ -1,3 +1,5 @@
+
+
 window.onload = function() {
   /* UI animation */
   show_div('res_info');
@@ -14,8 +16,12 @@ window.onload = function() {
   /* dispatch data */
   chrome.devtools.network.onRequestFinished.addListener(function(request){
     var url = request.request.url;
+    var cur_state = route(url);
     if (/.*mypage$/g.test(url)) {
+      /* Only for test */
       $('#test').html(url);
+
+      /* Information update */
       request.getContent(function(content, encoding) {
         var con = JSON.parse(content);
         show_data(con);
@@ -33,6 +39,11 @@ function show_div(div_id){
 }
 
 /* dispatch data here */
+function route(url) {
+
+}
+
+/* show data here */
 function show_data(con){
   if (con) {
     $('#tip').html();

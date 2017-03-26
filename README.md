@@ -4,6 +4,9 @@
 **0.x的版本都是无法使用的**，额如果抱有期待，最好等等1.x版本吧（当然我也会努力的）。
 
 ### TODO
-- 显示炼金术师资源信息
+- <del>显示炼金术师资源信息</del>
   - <del>获取request的url</del>
-  - 获取response的content
+  - <del>获取response的content</del>
+- 显示队伍信息
+- 显示疲劳、吃饭值
+- 潜书时丧失提醒
