@@ -4,15 +4,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewpoint">
     <meta content="telephone=no" name="format-detection">
+    <script src="assets/js/jquery-3.1.1.min.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="assets/bungo.css">
-    <title></title>
+    <script src="assets/js/vue.min.js"></script>
+    <script src="assets/bungo.js"></script>
   </head>
   <body>
     <div class="container">
@@ -47,16 +48,18 @@
       </div>
 
       <!-- 这个是队伍信息 -->
-      <div id="team_info" v-for="team in teams">
-        <div>{{ team }}</div>
-        <!-- <table class="table">
+      <div id="team_info">
+        <table class="table" v-for="team in teams">
+          <tr>
+          <th colspan="9">{{ team.name }}</th>
+          </tr>
           <tr>
             <td>名字</td>
             <td>武器</td>
             <td>等级</td>
             <td>侵蚀</td>
             <td>满腹度</td>
-            <td>装备</td>
+            <td>精神</td>
             <td>疲劳1</td>
             <td>疲劳2</td>
             <td>NextExp</td>
@@ -67,12 +70,12 @@
             <td>{{ member.level }}</td>
             <td>{{ member.hp }}</td>
             <td>{{ member.fp }}</td>
-            <td>{{ member.equipment }}</td>
+            <td>{{ member.mental }}</td>
             <td>{{ member.sp }}</td>
             <td>{{ member.lb }}</td>
             <td>{{ member.next_exp }}</td>
           </tr>
-        </table> -->
+        </table>
       </div>
 
       <!-- 这个是掉落信息 -->
@@ -80,11 +83,5 @@
         现在没有掉落
       </div>
     </div>
-
-    <div id="app">
-      {{ message }}
-    </div>
-    <script src="assets/js/vue.min.js"></script>
-    <script src="assets/bungo.js"></script>
   </body>
 </html>
