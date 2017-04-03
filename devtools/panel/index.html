@@ -10,18 +10,9 @@
     <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="assets/js/bootstrap.min.js"></script>
-
     <script src="assets/js/jquery-3.1.1.min.js"></script>
-    <script src="assets/js/vue.min.js"></script>
-
     <link rel="stylesheet" href="assets/bungo.css">
-    <script src="assets/bungo.js"></script>
-    <!-- <script src="app/route.js"></script> -->
-    <!-- <script>
-    window.onload = function() {
-      $("#name").html("hello");
-    }
-    </script> -->
+    <title></title>
   </head>
   <body>
     <div class="container">
@@ -30,10 +21,6 @@
         <li id="btn_team_info">队伍信息</li>
         <li id="btn_log_info">掉落记录</li>
       </ol>
-
-<div id="test">
-  <!-- {{ testinfo }} -->
-</div>
       <!-- 这个是资源信息 -->
       <div id="res_info">
         <table class="table">
@@ -61,7 +48,7 @@
 
       <!-- 这个是队伍信息 -->
       <div id="team_info" v-for="team in teams">
-        <div>{{ team.id }}.{{ team.name }}</div>
+        <div>{{ team }}</div>
         <!-- <table class="table">
           <tr>
             <td>名字</td>
@@ -93,5 +80,11 @@
         现在没有掉落
       </div>
     </div>
+
+    <div id="app">
+      {{ message }}
+    </div>
+    <script src="assets/js/vue.min.js"></script>
+    <script src="assets/bungo.js"></script>
   </body>
 </html>

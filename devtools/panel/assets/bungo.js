@@ -1,5 +1,5 @@
 /* all game status */
-// CURRENT MAX 12
+// CURRENT MAX 13
 var GAME_STATUS = {
   mypage: 1,      // 图书馆
   select_dive: 2, // 潜书界面
@@ -36,6 +36,12 @@ window.onload = function() {
 
   /* TEST ONLY */
 //  TEST_ONLY_show_all();
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
 
   /* dispatch data */
   chrome.devtools.network.onRequestFinished.addListener(function(request){
@@ -112,6 +118,7 @@ function show_mypage(con) {
 function show_deck(con) {
   var teams_data = [];
   var decks = con.decks;
+  for (var d in con.decks) {
   for (var d in decks) {
     // 获取一个队员的信息
     var mems = [];
@@ -137,6 +144,7 @@ function show_deck(con) {
       members: mems
     };
     teams_data.push(ateam);
+    teams_data.push(con.decks[d].name)
   }
 
   var team_app = new Vue({
