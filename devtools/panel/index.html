@@ -18,8 +18,8 @@
   <body>
     <div class="container">
       <ol class="breadcrumb">
-        <li id="btn_res_info">资源信息</li>
         <li id="btn_team_info">队伍信息</li>
+        <li id="btn_bungo_info">文豪信息</li>
         <li id="btn_log_info">掉落记录</li>
       </ol>
       <!-- 这个是资源信息 -->
@@ -50,9 +50,7 @@
       <!-- 这个是队伍信息 -->
       <div id="team_info">
         <table class="table" v-for="team in teams">
-          <tr>
-          <th colspan="9">{{ team.name }}</th>
-          </tr>
+          <tr><th colspan="9">{{ team.id }}.{{ team.name }}</th></tr>
           <tr>
             <td>名字</td>
             <td>武器</td>
@@ -65,6 +63,34 @@
             <td>NextExp</td>
           </tr>
           <tr v-for="member in team.members">
+            <td>{{ member.name }}</td>
+            <td>{{ member.category }}</td>
+            <td>{{ member.level }}</td>
+            <td>{{ member.hp }}</td>
+            <td>{{ member.fp }}</td>
+            <td>{{ member.mental }}</td>
+            <td>{{ member.sp }}</td>
+            <td>{{ member.lb }}</td>
+            <td>{{ member.next_exp }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="bungo_info">
+        <table class="table">
+          <tr><th colspan="9">所有文豪</th></tr>
+          <tr>
+            <td>名字</td>
+            <td>武器</td>
+            <td>等级</td>
+            <td>侵蚀</td>
+            <td>满腹度</td>
+            <td>精神</td>
+            <td>疲劳1</td>
+            <td>疲劳2</td>
+            <td>NextExp</td>
+          </tr>
+          <tr v-for="member in bungos">
             <td>{{ member.name }}</td>
             <td>{{ member.category }}</td>
             <td>{{ member.level }}</td>

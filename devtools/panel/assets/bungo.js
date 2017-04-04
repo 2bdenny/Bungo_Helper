@@ -32,15 +32,19 @@ var letter_settings_seconds = 0;  // 设置好的信件周期
 var letter_seconds = -1; // 信件倒计时
 var letter_count = 0;   // 信件数目
 
+/* 所有vue的app */
+var team_app;
+var bungo_app;
+
 /* main */
 window.onload = function() {
   /* UI animation */
-  show_div('res_info');
-  $('#btn_res_info').click(function(){
-    show_div('res_info');
-  });
+  show_div('team_info');
   $('#btn_team_info').click(function(){
     show_div('team_info');
+  });
+  $('#btn_bungo_info').click(function(){
+    show_div('bungo_info');
   });
   $('#btn_log_info').click(function(){
     show_div('log_info');
@@ -48,6 +52,21 @@ window.onload = function() {
 
   /* 信件倒计时 */
   setInterval(letter_time_countdown, 1000);
+
+  /* 创建Vue */
+  team_app = new Vue({
+    el: '#team_info',
+    data: {
+      teams: null
+    }
+  });
+
+  bungo_app = new Vue({
+    el: '#bungo_info',
+    data: {
+      bungos: null
+    }
+  });
 
   /* dispatch data */
   chrome.devtools.network.onRequestFinished.addListener(function(request){
@@ -69,16 +88,17 @@ window.onload = function() {
 /*****************************/
 /* TEST ONLY */
 function TEST_ONLY_show_all() {
-  $('#res_info').show();
   $('#team_info').show();
+  $('#bungo_info').show();
   $('#log_info').show();
 }
 /*****************************/
 
 /* UI animation of index.html */
 function show_div(div_id){
-  $('#res_info').hide();
+  // $('#res_info').hide();
   $('#team_info').hide();
+  $('#bungo_info').hide();
   $('#log_info').hide();
   if(div_id) $('#' + div_id).show();
 }
@@ -127,6 +147,7 @@ function show_data(con, cur_state){
     show_mypage(con);
   } else if (con && cur_state == GAME_STATUS.deck) { // 队伍信息
     show_deck(con);
+    show_bungos(con);
   } else {
     // 其他情况
   }
@@ -164,13 +185,14 @@ function show_deck(con) {
     var mems = [];
     // 获取一个队员的信息
     for (var m in con.decks[d].units) {
+      if (!con.decks[d].units[m]) continue;
       var amem = {
         name: con.decks[d].units[m].master.name,
         level: con.decks[d].units[m].level,
         category: con.decks[d].units[m].master.category,
         hp: con.decks[d].units[m].hp,
         fp: con.decks[d].units[m].fp,
-        mental: master_all_mentals[con.decks[d].units[m].master.mental],
+        mental: master_all_mentals[con.decks[d].units[m].master.mental - 1],
         sp: con.decks[d].units[m].sp,
         lb: con.decks[d].units[m].lb,
         next_exp: parseInt(con.decks[d].units[m].next_level_exp) - parseInt(con.decks[d].units[m].exp)
@@ -186,10 +208,26 @@ function show_deck(con) {
     teams_data.push(ateam);
   }
 
-  var team_app = new Vue({
-    el: '#team_info',
-    data: {
-      teams: teams_data
-    }
-  });
+  team_app.teams = teams_data;
+}
+
+/* 展示所有文豪信息 */
+function show_bungos(con) {
+  var bungos_data = [];
+  for (var d in con.units) {
+    var amem = {
+      name: con.units[d].master.name,
+      level: con.units[d].level,
+      category: con.units[d].master.category,
+      hp: con.units[d].hp,
+      fp: con.units[d].fp,
+      mental: master_all_mentals[con.units[d].master.mental - 1],
+      sp: con.units[d].sp,
+      lb: con.units[d].lb,
+      next_exp: parseInt(con.units[d].next_level_exp) - parseInt(con.units[d].exp)
+    };
+    bungos_data.push(amem);
+  }
+
+  bungo_app.bungos = bungos_data;
 }
