@@ -7,6 +7,9 @@ var letter_all_times = [ 1800, 3600, 10800, 21600, 43200 ];
 // 精神状况
 var master_all_mentals = [ '安定', '丫丫安定', '普通', '丫丫不安定', '不安定' ];
 
+// 武器
+var master_all_categories = [ '刃', '弓', '铳', '鞭' ];
+
 /* all game status */
 // CURRENT MAX 13
 // 这里主要是为了方便，数字可以随便改，只要没重复就行
@@ -189,7 +192,7 @@ function show_deck(con) {
       var amem = {
         name: con.decks[d].units[m].master.name,
         level: con.decks[d].units[m].level,
-        category: con.decks[d].units[m].master.category,
+        category: master_all_categories[con.decks[d].units[m].master.category - 1],
         hp: con.decks[d].units[m].hp,
         fp: con.decks[d].units[m].fp,
         mental: master_all_mentals[con.decks[d].units[m].master.mental - 1],
@@ -218,7 +221,7 @@ function show_bungos(con) {
     var amem = {
       name: con.units[d].master.name,
       level: con.units[d].level,
-      category: con.units[d].master.category,
+      category: master_all_categories[con.units[d].master.category - 1],
       hp: con.units[d].hp,
       fp: con.units[d].fp,
       mental: master_all_mentals[con.units[d].master.mental - 1],
