@@ -55,6 +55,9 @@ window.onload = function() {
   $('#btn_log_info').click(function(){
     show_div('log_info');
   });
+  $('#btn_egg_info').click(function(){
+    show_div('egg_info');
+  });
 
   /* 信件倒计时 */
   setInterval(letter_time_countdown, 1000);
@@ -97,6 +100,7 @@ function TEST_ONLY_show_all() {
   $('#team_info').show();
   $('#bungo_info').show();
   $('#log_info').show();
+  $('#egg_info').show();
 }
 /*****************************/
 
@@ -106,6 +110,7 @@ function show_div(div_id){
   $('#team_info').hide();
   $('#bungo_info').hide();
   $('#log_info').hide();
+  $('#egg_info').hide();
   if(div_id) $('#' + div_id).show();
 }
 
@@ -286,6 +291,8 @@ function update_bungo(id, item, value) {
         bungo_app.bungos[i].fp = value;
       } else if (item == 'lb') {
         bungo_app.bungos[i].lb = value;
+      } else if (item == 'next_exp') {
+        bungo_app.bungos[i].next_exp = value;
       }
       break; // 因为拥有的文豪不会重复
     }
@@ -299,6 +306,8 @@ function update_bungo(id, item, value) {
           team_app.teams[i].members[j].fp = value;
         } else if (item == 'lb') {
           team_app.teams[i].members[j].lb = value;
+        } else if (item == 'next_exp') {
+          team_app.teams[i].members[j].next_exp = value;
         }
         break; // 因为一个队伍里不会有相同的文豪
       }
@@ -312,6 +321,7 @@ function update_info_result(con) {
   for (var d in con.units) {
     update_bungo(con.units[d].id, 'fp', con.units[d].fp);
     update_bungo(con.units[d].id, 'lb', con.units[d].lb);
+    update_bungo(con.units[d].id, 'next_exp', parseInt(con.units[d].next_level_exp) - parseInt(con.units[d].exp));
   }
 
   // TODO update log
