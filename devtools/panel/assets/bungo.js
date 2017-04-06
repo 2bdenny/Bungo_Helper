@@ -11,7 +11,7 @@ var master_all_mentals = [ '安定', '丫丫安定', '普通', '丫丫不安定'
 var master_all_categories = [ '刃', '弓', '铳', '鞭' ];
 
 // 所有战斗结果
-var battle_all_results = ['优', '良', '没遇到过', '不'];
+var battle_all_results = ['优', '良', '可', '不'];
 
 /* all game status */
 // CURRENT MAX 16
@@ -272,7 +272,9 @@ function show_deck(con) {
         mental: master_all_mentals[con.decks[d].units[m].master.mental - 1],
         sp: con.decks[d].units[m].sp,
         lb: con.decks[d].units[m].lb,
-        next_exp: ne
+        next_exp: ne,
+        status: null,
+        status_countdown: 0
       };
       mems.push(amem);
     }
@@ -304,7 +306,9 @@ function show_bungos(con) {
       mental: master_all_mentals[con.units[d].master.mental - 1],
       sp: con.units[d].sp,
       lb: con.units[d].lb,
-      next_exp: ne
+      next_exp: ne,
+      status: null,
+      status_countdown: 0
     };
     bungos_data.push(amem);
   }
@@ -315,6 +319,7 @@ function show_bungos(con) {
 /* 文豪出阵选择战场 */
 // var current_stage = null;
 function update_info_start(con) {
+  // 重复了，这个函数暂时没有用
 }
 
 /* 文豪战斗，更新team数值和文豪列表的数值 */
@@ -413,4 +418,14 @@ function update_info_supply(con) {
   for (var d in con.units) {
     update_bungo(con.units[d].id, 'fp', con.units[d].fp);
   }
+}
+
+/* 根据修复信息更新文豪状态信息 */
+function update_info_repair_docks(con) {
+  // TODO update bungos and teams here, and start time countdown...
+}
+
+/* 根据有碍书潜书信息更新文豪状态信息 */
+function update_info_workspace(con) {
+  // TODO update bungos & teams here, and start time countdown
 }
