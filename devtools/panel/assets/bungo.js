@@ -10,6 +10,9 @@ var master_all_mentals = [ '安定', '丫丫安定', '普通', '丫丫不安定'
 // 武器
 var master_all_categories = [ '刃', '弓', '铳', '鞭' ];
 
+// 所有战斗结果
+var battle_all_results = ['优', '良', '没遇到过', '不'];
+
 /* all game status */
 // CURRENT MAX 16
 // 这里主要是为了方便，数字可以随便改，只要没重复就行
@@ -100,7 +103,8 @@ window.onload = function() {
   log_app = new Vue({
     el: '#log_info',
     data: {
-      logs: null
+      nos: 0,
+      logs: []
     }
   });
 
@@ -303,14 +307,12 @@ function show_bungos(con) {
 }
 
 /* 文豪出阵选择战场 */
-var current_stage = null;
+// var current_stage = null;
 function update_info_start(con) {
-  var cid = con.stage.mst_chapter_id;
-  var sid = con.stage.id;
-  current_stage = cid.toString() + '-' + sid.toString();
 }
 
 /* 文豪战斗，更新team数值和文豪列表的数值 */
+var current_hexid = 0;
 function update_info_battle(con) {
   // 捡到资源
   if (con.category == 2) return;
@@ -324,6 +326,9 @@ function update_info_battle(con) {
       update_bungo(bungo_id, 'hp', bungo_hp);
     }
   }
+
+  // 如果到了最后一个点，更新log信息
+  current_hexid = con.nowHexId;
 }
 
 /* 在这里更新bungos_data和team_data */
@@ -369,10 +374,26 @@ function update_info_result(con) {
     update_bungo(con.units[d].id, 'next_exp', parseInt(con.units[d].next_level_exp) - parseInt(con.units[d].exp));
   }
 
-  // TODO update log
+  // update log
+  var date = new Date();
+  var current_time = date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  var alog = {
+    no: log_app.nos + 1,
+    map: con.stage.mst_chapter_id + '-' + con.stage.id + ':' + current_hexid,
+    result: battle_all_results[con.status - 1],
+    bungo: con.hasDropUnit ? con.dropUnit.master.name : '无',
+    timestamp: current_time
+  }
+  log_app.logs.push(alog);
+  log_app.nos = log_app.nos + 1;
+  current_hexid = 0;
 }
 
 /* 根据战斗结束时的status更新炼金术师资源信息 */
 function update_info_status(con) {
-  // TODO update mypage
+  // update master lv info
+  res_app.level = con.level;
+  var ne = parseInt(con.next_level_exp) - parseInt(con.exp);
+  ne = ne > 0 ? ne : 0;
+  res_app.next_exp = ne;
 }
