@@ -29,21 +29,21 @@
         <table class="table">
           <!-- 炼金术师信息 -->
           <tr>
-            <td colspan="2">炼金术师：<span id="name">USERNAME</span></td>
-            <td>Lv.<span id="level">USER LEVEL</span></td>
-            <td>UID.<span id="user_id">USER ID</span></td>
+            <td colspan="2">炼金术师：<span>{{ username }}</span></td>
+            <td colspan="2">Lv.<span>{{ level }}</span></td>
+            <!-- <td>UID.<span>{{ uid }}</span></td> -->
           </tr>
           <!-- 资源信息 -->
           <tr>
-            <td>墨汁：<span id="res_ink">NUM1</span></td>
-            <td>饭团：<span id="res_food">NUM1</span></td>
-            <td>有魂书：<span id="item_book">NUM1</span></td>
-            <td>加速机：<span id="item_quick">NUM1</span></td>
+            <td>墨汁：<span>{{ res_ink }}</span></td>
+            <td>饭团：<span>{{ res_food }}</span></td>
+            <td>有魂书：<span>{{ item_book }}</span></td>
+            <td>加速机：<span>{{ item_quick }}</span></td>
           </tr>
           <!-- 信件信息 -->
           <tr>
-            <td colspan="2">信件设置：<span id="selectedTime">时间</span>/<span id="selectedItem">收益</span></td>
-            <td colspan="2">信件信息：<span id="letter_num">0</span>/2-<span id="letter_time">倒计时</span></td>
+            <td colspan="2">信件设置：<span>{{ selectedTime }}</span>/<span>{{ selectedItem }}</span></td>
+            <td colspan="2">信件信息：<span>{{ letter_num }}</span>/2-<span>{{ letter_time }}</span></td>
           </tr>
           <!-- <li class="ad"><a href="http://weibo.com/2bdenny" target="_blank">向凌大大致敬</a></li> -->
         </table>
@@ -59,7 +59,7 @@
             <td>等级</td>
             <td>侵蚀</td>
             <td>满腹度</td>
-            <td>精神</td>
+            <!-- <td>精神</td> -->
             <td>疲劳</td>
             <td>降临</td>
             <td>NextExp</td>
@@ -70,7 +70,7 @@
             <td>{{ member.level }}</td>
             <td>{{ member.hp }}</td>
             <td>{{ member.fp }}</td>
-            <td>{{ member.mental }}</td>
+            <!-- <td>{{ member.mental }}</td> -->
             <td>{{ member.sp }}</td>
             <td>{{ member.lb }}</td>
             <td>{{ member.next_exp }}</td>
@@ -78,6 +78,7 @@
         </table>
       </div>
 
+      <!-- 这个是文豪信息 -->
       <div id="bungo_info">
         <table class="table">
           <tr><th colspan="9">所有文豪</th></tr>
@@ -88,7 +89,7 @@
             <td>侵蚀</td>
             <td>满腹度</td>
             <td>精神</td>
-            <td>疲劳</td>
+            <!-- <td>疲劳</td> -->
             <td>降临</td>
             <td>NextExp</td>
           </tr>
@@ -99,7 +100,7 @@
             <td>{{ member.hp }}</td>
             <td>{{ member.fp }}</td>
             <td>{{ member.mental }}</td>
-            <td>{{ member.sp }}</td>
+            <!-- <td>{{ member.sp }}</td> -->
             <td>{{ member.lb }}</td>
             <td>{{ member.next_exp }}</td>
           </tr>
@@ -108,7 +109,22 @@
 
       <!-- 这个是掉落信息 -->
       <div id="log_info">
-        掉落记录还没写好。。
+        <table class="table">
+          <tr>
+            <th>序号</th>
+            <th>地图</th>
+            <th>结果</th>
+            <th>掉落</th>
+            <th>时间</th>
+          </tr>
+          <tr v-for="item in logs">
+            <td>{{ item.no }}</td>
+            <td>{{ item.map }}</td>
+            <td>{{ item.result }}</td>
+            <td>{{ item.bungo }}</td>
+            <td>{{ item.timestamp }}</td>
+          </tr>
+        </table>
       </div>
 
       <div id = "egg_info">

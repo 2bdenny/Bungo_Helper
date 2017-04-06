@@ -28,9 +28,10 @@ var GAME_STATUS = {
   myroom: 11,      // 司书室
   letters_open: 12,// 收信
   letters_settings: 13,//设置书信时间
-  stages: 14, //选择战场
-  battle: 15,  //出阵
-  result: 16  // 结果
+  start: 14, //选择战场
+  battle: 15,  // 出阵
+  result: 16,  // 结果
+  status: 17   // 炼金术师资源&经验值更新
 };
 
 /* 信件信息 */
@@ -39,8 +40,10 @@ var letter_seconds = -1; // 信件倒计时
 var letter_count = 0;   // 信件数目
 
 /* 所有vue的app */
-var team_app;
-var bungo_app;
+var res_app;  // 资源信息
+var team_app; // 队伍信息
+var bungo_app;// 文豪信息
+var log_app;  // 掉落记录
 
 /* main */
 window.onload = function() {
@@ -63,6 +66,22 @@ window.onload = function() {
   setInterval(letter_time_countdown, 1000);
 
   /* 创建Vue */
+  res_app = new Vue({
+    el: '#res_info',
+    data: {
+      username: "USERNAME",
+      lever: "LEVEL",
+      uid: "UID",
+      res_ink: "INK",
+      res_food: "FOOD",
+      item_book: "BOOK",
+      item_quick: "QUICK",
+      selectedTime: "LETTER_TIME",
+      selectedItem: "LETTER_ITEM",
+      letter_num: "NUM",
+      letter_time: "TIME"
+    }
+  });
   team_app = new Vue({
     el: '#team_info',
     data: {
@@ -74,6 +93,13 @@ window.onload = function() {
     el: '#bungo_info',
     data: {
       bungos: null
+    }
+  });
+
+  log_app = new Vue({
+    el: '#log_info',
+    data: {
+      logs: null
     }
   });
 
@@ -114,6 +140,7 @@ function show_div(div_id){
   if(div_id) $('#' + div_id).show();
 }
 
+/* 信件倒计时 */
 function letter_time_countdown() {
   if (letter_seconds > 0) {
     letter_seconds = letter_seconds - 1;
@@ -151,13 +178,16 @@ function route(url) {
     return GAME_STATUS.deck;
   }
   if (/.*stages\/start\/\d+/g.test(url)) {
-    return GAME_STATUS.stages;
+    return GAME_STATUS.start;
   }
   if (/.*stages\/battle/g.test(url)) {
     return GAME_STATUS.battle;
   }
   if (/.*stages\/result/g.test(url)) {
     return GAME_STATUS.result;
+  }
+  if (/.*status$/g.test(url)) {
+    return GAME_STATUS.status;
   }
 }
 
@@ -168,12 +198,14 @@ function show_data(con, cur_state){
   } else if (con && cur_state == GAME_STATUS.deck) { // 队伍信息
     show_deck(con);
     show_bungos(con);
-  } else if (con && cur_state == GAME_STATUS.stages) {
-    update_log_stage(con);
+  } else if (con && cur_state == GAME_STATUS.start) {
+    update_info_start(con);
   } else if (con && cur_state == GAME_STATUS.battle) {
     update_info_battle(con);
   } else if (con && cur_state == GAME_STATUS.result) {
     update_info_result(con);
+  } else if (con && cur_state == GAME_STATUS.status) {
+    update_info_status(con);
   } else {
     // 其他情况
   }
@@ -212,6 +244,10 @@ function show_deck(con) {
     // 获取一个队员的信息
     for (var m in con.decks[d].units) {
       if (!con.decks[d].units[m]) continue;
+
+      var ne = parseInt(con.decks[d].units[m].next_level_exp) - parseInt(con.decks[d].units[m].exp);
+      ne = ne > 0 ? ne : 0; // 满级经验是负数，统一成0
+
       var amem = {
         id: con.decks[d].units[m].id,
         name: con.decks[d].units[m].master.name,
@@ -222,7 +258,7 @@ function show_deck(con) {
         mental: master_all_mentals[con.decks[d].units[m].master.mental - 1],
         sp: con.decks[d].units[m].sp,
         lb: con.decks[d].units[m].lb,
-        next_exp: parseInt(con.decks[d].units[m].next_level_exp) - parseInt(con.decks[d].units[m].exp)
+        next_exp: ne
       };
       mems.push(amem);
     }
@@ -242,6 +278,8 @@ function show_deck(con) {
 function show_bungos(con) {
   var bungos_data = [];
   for (var d in con.units) {
+    var ne = parseInt(con.units[d].next_level_exp) - parseInt(con.units[d].exp);
+    ne = ne > 0 ? ne : 0; // 满级经验是负数
     var amem = {
       id: con.units[d].id,
       name: con.units[d].master.name,
@@ -252,7 +290,7 @@ function show_bungos(con) {
       mental: master_all_mentals[con.units[d].master.mental - 1],
       sp: con.units[d].sp,
       lb: con.units[d].lb,
-      next_exp: parseInt(con.units[d].next_level_exp) - parseInt(con.units[d].exp)
+      next_exp: ne
     };
     bungos_data.push(amem);
   }
@@ -261,8 +299,11 @@ function show_bungos(con) {
 }
 
 /* 文豪出阵选择战场 */
-function update_log_stage(con) {
-  // TODO 战场信息，更新log
+var current_stage = null;
+function update_info_start(con) {
+  var cid = con.stage.mst_chapter_id;
+  var sid = con.stage.id;
+  current_stage = cid.toString() + '-' + sid.toString();
 }
 
 /* 文豪战斗，更新team数值和文豪列表的数值 */
@@ -325,4 +366,9 @@ function update_info_result(con) {
   }
 
   // TODO update log
+}
+
+/* 根据战斗结束时的status更新炼金术师资源信息 */
+function update_info_status(con) {
+  // TODO update mypage
 }
