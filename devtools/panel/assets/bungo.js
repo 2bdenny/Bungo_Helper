@@ -34,7 +34,8 @@ var GAME_STATUS = {
   start: 14, //选择战场
   battle: 15,  // 出阵
   result: 16,  // 结果
-  status: 17   // 炼金术师资源&经验值更新
+  status: 17,   // 炼金术师资源&经验值更新
+  supply: 18    // 吃饭
 };
 
 /* 信件信息 */
@@ -194,6 +195,9 @@ function route(url) {
   if (/.*status$/g.test(url)) {
     return GAME_STATUS.status;
   }
+  if (/.*page\/supply$/g.test(url)){
+    return GAME_STATUS.supply;
+  }
 }
 
 /* show data here */
@@ -211,6 +215,8 @@ function show_data(con, cur_state){
     update_info_result(con);
   } else if (con && cur_state == GAME_STATUS.status) {
     update_info_status(con);
+  } else if (con && cur_state == GAME_STATUS.supply) {
+    update_info_supply(con);
   } else {
     // 其他情况
   }
@@ -396,4 +402,15 @@ function update_info_status(con) {
   var ne = parseInt(con.next_level_exp) - parseInt(con.exp);
   ne = ne > 0 ? ne : 0;
   res_app.next_exp = ne;
+}
+
+/* 根据文豪吃饭更新饭团信息和文豪fp信息 */
+function update_info_supply(con) {
+  // 更新饭团信息
+  res_app.res_food = con.header.res_food;
+
+  // 更新文豪信息
+  for (var d in con.units) {
+    update_bungo(con.units[d].id, 'fp', con.units[d].fp);
+  }
 }
