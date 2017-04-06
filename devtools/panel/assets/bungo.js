@@ -69,9 +69,10 @@ window.onload = function() {
   res_app = new Vue({
     el: '#res_info',
     data: {
-      username: "USERNAME",
-      lever: "LEVEL",
+      name: "USERNAME",
+      level: "LEVEL",
       uid: "UID",
+      next_exp: "NEXTEXP",
       res_ink: "INK",
       res_food: "FOOD",
       item_book: "BOOK",
@@ -147,7 +148,7 @@ function letter_time_countdown() {
     var h = Math.floor(letter_seconds / 3600);
     var m = Math.floor( (letter_seconds - h * 3600) / 60 );
     var s = letter_seconds - h * 3600 - m * 60;
-    $('#letter_time').html(h.toString() + ":" + m.toString() + ":" + s.toString());
+    res_app.letter_time = h.toString() + ":" + m.toString() + ":" + s.toString();
   } else if (letter_seconds == 0 ){
     if (letter_count == 0) {
       letter_count = letter_count + 1;
@@ -164,7 +165,7 @@ function letter_time_countdown() {
       return ;
     }
   } else {
-    $('#letter_time').html("0:0:0");
+    res_app.letter_time = "0:0:0";
   }
 }
 
@@ -214,23 +215,26 @@ function show_data(con, cur_state){
 /* 展示首页信息，包含用户信息、资源信息、信件信息 */
 function show_mypage(con) {
   // 用户信息
-  $('#name').html(con.header.name);
-  $('#level').html(con.header.level);
-  $('#user_id').html(con.header.user_id);
+  res_app.name = con.header.name;
+  res_app.level = con.header.level;
+  res_app.uid = con.header.user_id;
+  var ne = parseInt(con.header.next_level_exp) - parseInt(con.header.exp);
+  ne = ne > 0 ? ne : 0;
+  res_app.next_exp = ne;
 
   // 资源信息
-  $('#res_ink').html(con.header.res_ink);
-  $('#res_food').html(con.header.res_food);
-  $('#item_book').html(con.header.item_book);
-  $('#item_quick').html(con.header.item_quick);
+  res_app.res_ink = con.header.res_ink;
+  res_app.res_food = con.header.res_food;
+  res_app.item_book = con.header.item_book;
+  res_app.item_quick = con.header.item_quick;
 
   // 信件信息
   var sT = con.letter.settings.selectedTime;
   var sI = con.letter.settings.selectedItem;
   var unit = ['饭团', '墨汁'];
-  $('#selectedTime').html(con.letter.settings.times[sT]);
-  $('#selectedItem').html(con.letter.settings.items[sI][sT] + unit[sI-1]);
-  $('#letter_num').html(con.letter.check.num);
+  res_app.selectedTime = con.letter.settings.times[sT];
+  res_app.selectedItem = con.letter.settings.items[sI][sT] + unit[sI-1];
+  res_app.letter_num = con.letter.check.num;
   letter_settings_seconds = letter_all_times[sT];
   letter_seconds = con.letter.check.time;
   letter_count = con.letter.check.num;
