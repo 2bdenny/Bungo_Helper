@@ -26,8 +26,9 @@ var BUNGO_STATUS = {
 // 这里主要是为了方便，数字可以随便改，只要没重复就行
 var GAME_STATUS = {
   mypage: 1,      // 图书馆
-  workspaces: 3,  // 有魂书界面
-  work_force_finish: 4,      // 有魂书结束，结束后会重新调用workspaces
+  workspaces: 2,  // 有魂书界面
+  work: 3,
+  work_finish: 4, // 有魂书自然结束
   // 有魂书开始
   repair_docks: 5,// 修补界面，推测有给出所有人的id和修补速度
   repair_force_finish: 6,// 选择一个修补，是一串数字，结束后同样会重新调用repair_docks
@@ -42,7 +43,8 @@ var GAME_STATUS = {
   battle: 15,  // 出阵
   result: 16,  // 结果
   status: 17,   // 炼金术师资源&经验值更新
-  supply: 18    // 吃饭
+  supply: 18,    // 吃饭
+  mission: 19   // 任务完成时更新资源
 };
 
 /* 信件信息 */
@@ -70,9 +72,9 @@ window.onload = function() {
   $('#btn_battle_log_info').click(function(){
     show_div('battle_log_info');
   });
-  $('#btn_build_log_info').click(function(){
-    show_div('build_log_info');
-  });
+  // $('#btn_build_log_info').click(function(){
+  //   show_div('build_log_info');
+  // });
   $('#btn_egg_info').click(function(){
     show_div('egg_info');
   });
@@ -137,7 +139,7 @@ window.onload = function() {
     var cur_state = route(url);
     request.getContent(function(content, encoding) {
       var con = JSON.parse(content);
-      show_data(con, cur_state);
+      show_data(url, con, cur_state);
     });
   });
 
@@ -165,7 +167,7 @@ function show_div(div_id){
   $('#team_info').hide();
   $('#bungo_info').hide();
   $('#battle_log_info').hide();
-  $('#build_log_info').show();
+  $('#build_log_info').hide();
   $('#egg_info').hide();
   if(div_id) $('#' + div_id).show();
 }
@@ -216,9 +218,11 @@ function bungo_status_countdown() {
           if (team_app.teams[i].members[j].status == BUNGO_STATUS.repair) {
             // 补修完成时额外更新hp
             team_app.teams[i].members[j].hp = 100;
+            team_app.teams[i].members[j].status = BUNGO_STATUS.leisure;
+            team_app.teams[i].members[j].status_show = null;
+          } else if (team_app.teams[i].members[j].status == BUNGO_STATUS.work) {
+            // TODO 有魂书潜书完成提醒
           }
-          team_app.teams[i].members[j].status = BUNGO_STATUS.leisure;
-          team_app.teams[i].members[j].status_show = null;
         } else if (team_app.members[j].status_countdown < 0) {
           // 这种情况出现在，有人正在补修/work但是没有去过补修/work界面时
           team_app.teams[i].members[j].status_show = bungo_all_statuses[team_app.teams[i].members[j].status];
@@ -244,9 +248,11 @@ function bungo_status_countdown() {
         if (bungo_app.bungos[i].status == BUNGO_STATUS.repair) {
           // 补修完成时额外更新hp
           bungo_app.bungos[i].hp = 100;
+          bungo_app.bungos[i].status = BUNGO_STATUS.leisure;
+          bungo_app.bungos[i].status_show = null;
+        } else if (bungo_app.bungos[i].status == BUNGO_STATUS.work) {
+          // TODO 有魂书潜书完成提醒
         }
-        bungo_app.bungos[i].status = BUNGO_STATUS.leisure;
-        bungo_app.bungos[i].status_show = null;
       } else if (team_app.members[j].status_countdown < 0) {
         // 这种情况出现在，有人正在补修但是没有去过补修界面时
         bungo_app.bungos[i].status_show = bungo_all_statuses[bungo_app.bungos[i].status];
@@ -287,13 +293,25 @@ function route(url) {
   if (/.*repair_docks\/\d+\/force_finish$/g.test(url)) {
     return GAME_STATUS.repair_force_finish;
   }
-  if (/.*workspaces/g.test(url)) {
+  if (/.*workspaces$/g.test(url)) {
     return GAME_STATUS.workspaces;
+  }
+  if (/.*workspaces\/\d+$/g.test(url)) {
+    return GAME_STATUS.work;
+  }
+  if (/.*workspaces\/\d+\/force_finish$/g.test(url)) {
+    return GAME_STATUS.work_finish;
+  }
+  if (/.*workspaces\/\d+\/finish$/g.test(url)) {
+    return GAME_STATUS.work_finish;
+  }
+  if (/.*mission$/g.test(url)) {
+    return GAME_STATUS.mission;
   }
 }
 
 /* show data here */
-function show_data(con, cur_state){
+function show_data(url, con, cur_state){
   if (con && cur_state == GAME_STATUS.mypage) { // 首页信息，包含用户信息、资源信息、信件信息
     show_mypage(con);
   } else if (con && cur_state == GAME_STATUS.deck) { // 队伍信息
@@ -315,6 +333,12 @@ function show_data(con, cur_state){
     update_info_repair_force_finish(con);
   } else if (con && cur_state == GAME_STATUS.workspaces) {
     update_info_workspaces(con);
+  } /*else if (con && cur_state == GAME_STATUS.work) {
+    update_info_work(url);
+  } */else if (con && cur_state == GAME_STATUS.work_finish) {
+    update_info_work_finish(url, con);
+  } else if (con && cur_state == GAME_STATUS.mission) {
+    update_info_mission(con);
   } else {
     // 其他情况
   }
@@ -523,29 +547,19 @@ function update_info_repair_docks(con) {
 
 /* 使用加速机进行补修时立刻更新信息 */
 function update_info_repair_force_finish(con) {
+  var bungo_id = -1;
   for (var i = 0; i < bungo_app.bungos.length; i++) {
     if (bungo_app.bungos[i].status_no == con.finish) {
-      bungo_app.bungos[i].hp = 100;
-      bungo_app.bungos[i].status = BUNGO_STATUS.leisure;
-      bungo_app.bungos[i].status_no = -1;
-      bungo_app.bungos[i].status_countdown = -1;
-      bungo_app.bungos[i].status_show = null;
+      bungo_id = bungo_app.bungos[i].id;
       break;
     }
   }
 
-  for (var i = 0; i < team_app.teams.length; i++) {
-    for (var j = 0; j < team_app.teams[i].members.length; j++) {
-      if (team_app.teams[i].members[j].status_no == con.finish) {
-        team_app.teams[i].members[j].hp = 100;
-        team_app.teams[i].members[j].status = BUNGO_STATUS.leisure;
-        team_app.teams[i].members[j].status_no = -1;
-        team_app.teams[i].members[j].status_countdown = -1;
-        team_app.teams[i].members[j].status_show = null;
-        break;
-      }
-    }
-  }
+  update_bungo(bungo_id, 'hp', 100);
+  update_bungo(bungo_id, 'status', BUNGO_STATUS.leisure);
+  update_bungo(bungo_id, 'status_no', -1);
+  update_bungo(bungo_id, 'status_countdown', -1);
+  update_bungo(bungo_id, 'status_show', null);
 }
 
 /* 根据有碍书潜书信息更新文豪状态信息 */
@@ -557,11 +571,42 @@ function update_info_workspaces(con) {
   for (var d in con.workspaces) {
     if (con.workspaces[d].do_work == 1) {
       update_bungo(con.workspaces[d].worker_unit.id, 'status', BUNGO_STATUS.work);
+      update_bungo(con.workspaces[d].worker_unit.id, 'status_no', con.workspaces[d].id);
       update_bungo(con.workspaces[d].worker_unit.id, 'status_countdown', con.workspaces[d].work_sec);
     }
   }
 }
 
-function update_info_work_force_finish(con) {
-  // TODO update bungo & teams here
+/* 进行潜书 */
+var working_no = -1;
+function update_info_work(url){
+  //working = parseInt(url.match(/.*workspaces\/(\d+)$/)[1]);
+}
+
+/* 潜书结束的时候更新倒计时信息 */
+function update_info_work_finish(url, con) {
+  // TODO 潜书记录
+  // 先找到潜书的文豪
+  var sn = parseInt(url.match(/.*workspaces\/(\d+)\/.*$/)[1]);
+  var leader_id = -1;
+  //var leader_name = null;
+  for (var i = 0; i < bungo_app.bungos.length; i++) {
+    if (bungo_app.bungos[i].status_no == sn) {
+      leader_id = bungo_app.bungos[i].id;
+      //leader_name = bungo_app.bungos[i].name;
+    }
+  }
+  // 然后更新这个文豪的信息
+  update_bungo(leader_id, 'status', BUNGO_STATUS.leisure);
+  update_bungo(leader_id, 'status_no', -1);
+  update_bungo(leader_id, 'status_countdown', -1);
+  update_bungo(leader_id, 'status_show', null);
+}
+
+/* 完成任务的时候更新资源信息 */
+function update_info_mission(con) {
+  res_app.res_ink = con.header.res_ink;
+  res_app.res_food = con.header.res_food;
+  res_app.item_book = con.header.item_book;
+  res_app.item_quick = con.header.item_quick;
 }
