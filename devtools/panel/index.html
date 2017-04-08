@@ -118,7 +118,7 @@
       <!-- 这个是掉落信息 -->
       <div id="battle_log_info">
         <table class="table">
-          <tr>
+          <tr class="info">
             <th>序号</th>
             <th>地图</th>
             <th>结果</th>
@@ -136,8 +136,13 @@
       </div>
 
       <div id="build_log_info">
-        <table>
-          <tr>
+        <!-- <ol>
+          <li v-for="x in test">
+            {{x.name}}
+          </li>
+        </ol> -->
+        <table class="table">
+          <tr class="info">
             <th>序号</th>
             <th>队长</th>
             <th>墨汁</th>
@@ -145,6 +150,7 @@
             <th>时长</th>
             <th>时间</th>
             <th>出货</th>
+            <!-- <th>status_no</th> -->
           </tr>
           <tr v-for="item in logs">
             <td>{{ item.no }}</td>
@@ -154,6 +160,7 @@
             <td>{{ item.interval }}</td>
             <td>{{ item.timestamp }}</td>
             <td>{{ item.bungo }}</td>
+            <!-- <td>{{ item.status_no }}</td> -->
           </tr>
         </table>
       </div>

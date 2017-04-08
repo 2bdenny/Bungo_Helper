@@ -130,9 +130,20 @@ window.onload = function() {
     el: '#build_log_info',
     data: {
       nos: 0,
+      // test: [],
       logs: []
     }
   });
+
+  /*****************************/
+    /* TEST ONLY */
+    // TEST_ONLY_show_all();
+    // build_log_app.test.push({name: 'hello'});
+    // build_log_app.test.push({name: 'hi'});
+    // build_log_app.test.push({name: 'hex'});
+    // build_log_app.test[1].name = 'yes';
+    // Vue.set(build_log_app.test, 0, {name: 'changed'});
+  /*****************************/
 
   /* dispatch data */
   chrome.devtools.network.onRequestFinished.addListener(function(request){
@@ -143,11 +154,6 @@ window.onload = function() {
       show_data(url, con, cur_state);
     });
   });
-
-/*****************************/
-  /* TEST ONLY */
-  //TEST_ONLY_show_all();
-/*****************************/
 
 }
 
@@ -633,17 +639,14 @@ function update_info_work(url){
 
 /* 潜书结束的时候更新倒计时信息 */
 function update_info_work_finish(url, con) {
-  // 先找到潜书的文豪
+  // 更新文豪信息
   var sn = parseInt(url.match(/.*workspaces\/(\d+)\/.*$/)[1]);
   var leader_id = -1;
-  //var leader_name = null;
   for (var i = 0; i < bungo_app.bungos.length; i++) {
     if (bungo_app.bungos[i].status_no == sn) {
       leader_id = bungo_app.bungos[i].id;
-      //leader_name = bungo_app.bungos[i].name;
     }
   }
-  // 然后更新这个文豪的信息
   update_bungo(leader_id, 'status', BUNGO_STATUS.leisure);
   update_bungo(leader_id, 'status_no', -1);
   update_bungo(leader_id, 'status_countdown', -1);
@@ -652,16 +655,16 @@ function update_info_work_finish(url, con) {
   // 更新潜书记录
   for (var i = 0; i < build_log_app.logs.length; i++) {
     if (build_log_app.logs[i].status_no == sn) {
-      bulid_log_app.logs[i].status_no = -1;
-      build_log_app.logs[i].bungo = con.unit.master.name;
+      var alog = build_log_app.logs[i];
+      alog.status_no = -1;
+      alog.bungo = con.unit.master.name;
+      Vue.set(build_log_app.logs, i, alog);
+      break;
     }
   }
 }
 
 /* 完成任务的时候更新资源信息 */
 function update_info_mission(con) {
-  res_app.res_ink = con.header.res_ink;
-  res_app.res_food = con.header.res_food;
-  res_app.item_book = con.header.item_book;
-  res_app.item_quick = con.header.item_quick;
+  update_header_info(con.header);
 }
