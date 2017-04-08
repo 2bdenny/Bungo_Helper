@@ -21,7 +21,7 @@
         <li id="btn_team_info">队伍信息</li>
         <li id="btn_bungo_info">文豪信息</li>
         <li id="btn_battle_log_info">掉落记录</li>
-        <!-- <li id="btn_build_log_info">有魂书记录</li> -->
+        <li id="btn_build_log_info">有魂书记录</li>
         <li id="btn_egg_info">关于</li>
       </ol>
       <!-- 这个是资源信息 -->
@@ -30,9 +30,9 @@
         <table class="table">
           <!-- 炼金术师信息 -->
           <tr>
-            <td colspan="2">炼金术师：<span>{{ name }}</span></td>
-            <td>Lv.<span>{{ level }}</span></td>
-            <td>NextExp:<span>{{ next_exp }}</span></td>
+            <td colspan="2" class="col-lg-4">炼金术师：<span>{{ name }}</span></td>
+            <td class="col-lg-2">Lv.<span>{{ level }}</span></td>
+            <td class="col-lg-2">NextExp:<span>{{ next_exp }}</span></td>
             <!-- <td>UID.<span>{{ uid }}</span></td> -->
           </tr>
           <!-- 资源信息 -->
@@ -55,17 +55,17 @@
       <div id="team_info">
         <table class="table" v-for="team in teams">
           <tr><th colspan="9">{{ team.id }}.{{ team.name }}</th></tr>
-          <tr>
-            <td>名字</td>
-            <td>武器</td>
-            <td>等级</td>
-            <td>侵蚀</td>
-            <td>满腹度</td>
+          <tr class="info">
+            <td class="col-lg-2">名字</td>
+            <td class="col-lg-2">武器</td>
+            <td class="col-lg-2">等级</td>
+            <td class="col-lg-2">侵蚀</td>
+            <td class="col-lg-2">满腹度</td>
             <!-- <td>精神</td> -->
-            <td>疲劳</td>
-            <td>降临</td>
-            <td>NextExp</td>
-            <td>状态</td>
+            <td class="col-lg-2">疲劳</td>
+            <td class="col-lg-2">降临</td>
+            <td class="col-lg-2">NextExp</td>
+            <td class="col-lg-3">状态</td>
           </tr>
           <tr v-for="member in team.members">
             <td>{{ member.name }}</td>
@@ -84,20 +84,22 @@
 
       <!-- 这个是文豪信息 -->
       <div id="bungo_info">
+        <!-- <div>test{{test}}</div> -->
         <table class="table">
-          <tr><th colspan="9">所有文豪</th></tr>
-          <tr>
-            <td>名字</td>
-            <td>武器</td>
-            <td>等级</td>
-            <td>侵蚀</td>
-            <td>满腹度</td>
-            <td>精神</td>
-            <!-- <td>疲劳</td> -->
-            <td>降临</td>
-            <td>NextExp</td>
-            <td>状态</td>
+          <thead>
+          <tr class="info">
+            <th class="col-lg-2">名字</th>
+            <th class="col-lg-2">武器</th>
+            <th class="col-lg-2">等级</th>
+            <th class="col-lg-2">侵蚀</th>
+            <th class="col-lg-2">满腹度</th>
+            <th class="col-lg-2">精神</th>
+            <!-- <td class="col-lg-2">疲劳</td> -->
+            <th class="col-lg-2">降临</th>
+            <th class="col-lg-2">NextExp</th>
+            <th class="col-lg-3">状态</th>
           </tr>
+          </thead>
           <tr v-for="member in bungos">
             <td>{{ member.name }}</td>
             <td>{{ member.category }}</td>
@@ -133,13 +135,13 @@
         </table>
       </div>
 
-      <!-- <div id="build_log_info">
+      <div id="build_log_info">
         <table>
           <tr>
             <th>序号</th>
             <th>队长</th>
             <th>墨汁</th>
-            <th>书签</th>
+            <!-- <th>书签</th> -->
             <th>时长</th>
             <th>时间</th>
             <th>出货</th>
@@ -148,13 +150,13 @@
             <td>{{ item.no }}</td>
             <td>{{ item.leader }}</td>
             <td>{{ item.ink }}</td>
-            <td>{{ item.bookmark }}</td>
+            <!-- <td>{{ item.bookmark }}</td> -->
             <td>{{ item.interval }}</td>
             <td>{{ item.timestamp }}</td>
             <td>{{ item.bungo }}</td>
           </tr>
         </table>
-      </div> -->
+      </div>
 
       <div id = "egg_info">
         <ol>
