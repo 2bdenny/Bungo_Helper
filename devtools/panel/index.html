@@ -20,13 +20,13 @@
       <ol class="breadcrumb">
         <li id="btn_team_info">队伍信息</li>
         <li id="btn_bungo_info">文豪信息</li>
-        <li id="btn_battle_log_info">掉落记录</li>
+        <li id="btn_battle_log_info">有碍书记录</li>
         <li id="btn_build_log_info">有魂书记录</li>
         <li id="btn_egg_info">关于</li>
       </ol>
       <!-- 这个是资源信息 -->
       <div id="res_info">
-        看不到资源信息的话去一下结成界面再回来。。
+        看不到信息的话去一下结成界面再回来。。
         <table class="table">
           <!-- 炼金术师信息 -->
           <tr>
@@ -44,8 +44,8 @@
           </tr>
           <!-- 信件信息 -->
           <tr>
-            <td>信件设置：<span>{{ selectedTime }}</span>/<span>{{ selectedItem }}</span></td>
-            <td>信件信息：<span>{{ letter_num }}</span>/2-<span>{{ letter_time }}</span></td>
+            <td colspan="2">信件设置：<span>{{ selectedTime }}</span>/<span>{{ selectedItem }}</span></td>
+            <td colspan="2">信件信息：<span>{{ letter_num }}</span>/2-<span>{{ letter_time }}</span></td>
           </tr>
           <!-- <li class="ad"><a href="http://weibo.com/2bdenny" target="_blank">向凌大大致敬</a></li> -->
         </table>
@@ -166,13 +166,30 @@
       </div>
 
       <div id = "egg_info">
-        <ol>
-          <li>第一次写chrome扩展，工程结构参考的是<a href="http://weibo.com/moelynn">凌大大</a>的婶婶忙，但是婶婶忙太专业了，代码看不懂Orz。。。所以没有直接fork他的工程而是新开了一个。。。但是还是要感谢他。。。</li>
-          <li>交互界面、各种功能的修改和新增意见<b>请随意提</b>。。不一定能搞出来但会尽量试一下。。</li>
-          <li>更新频率会是。。周末诈尸一下这种。。</li>
-          <li>联系方式的话，可以QQ敲我（如果知道我QQ），也可以在<a href="http://weibo.com/2906583695/ECZt52SAy?from=page_1005052906583695_profile&wvr=6&mod=weibotime&type=comment">微博</a>留言。。不用关注。。请让我继续透明下去。。</li>
-          <li>GitHub: <a href="https://github.com/2bdenny/Bungo_Helper">Bungo_Helper</a></li>
-        </ol>
+        <div>
+          <b>v1.1.0 更新说明</b>
+          <ol>
+            <li>增加地图掉落记录（目前无法导出和保存，地图显示也可能有点奇怪）</li>
+            <li>增加有魂书潜书记录（也无法导出）</li>
+            <li>吃饭及时更新饱腹度</li>
+            <li>完成任务及时更新资源信息</li>
+            <li>增加状态，可以显示补修和潜书倒计时（有±5秒的误差），使用加速机时，及时更新侵蚀和状态</li>
+            <li>队伍里不再显示精神，仅在所有文豪界面显示</li>
+            <li>仅在队伍里显示疲劳度，因为只有在队伍里的时候才是准确的</li>
+            <li>给侵蚀和饱腹度加上颜色提示，丧失（红色）：侵蚀 < 10，耗弱（黄色）：10 <= 侵蚀 < 20；饱腹度小于100全显示黄色</li>
+          </ol>
+        </div>
+        <br />
+        <div>
+          <b>其他</b>
+          <ol>
+            <li>第一次写chrome扩展，工程结构参考的是<a href="http://weibo.com/moelynn">凌大大</a>的婶婶忙，但是婶婶忙太专业了，代码看不懂Orz。。。所以没有直接fork他的工程而是新开了一个。。。但是还是要感谢他。。。</li>
+            <li>交互界面、各种功能的修改和新增意见<b>请随意提</b>。。不一定能搞出来但会尽量试一下。。</li>
+            <li>更新频率会是。。周末诈尸一下这种。。</li>
+            <li>联系方式的话，可以QQ敲我（如果知道我QQ），也可以在<a href="http://weibo.com/2906583695/ECZt52SAy?from=page_1005052906583695_profile&wvr=6&mod=weibotime&type=comment">微博</a>留言。。不用关注。。请让我继续透明下去。。</li>
+            <li>GitHub: <a href="https://github.com/2bdenny/Bungo_Helper">Bungo_Helper</a></li>
+          </ol>
+        </div>
       </div>
     </div>
   </body>
