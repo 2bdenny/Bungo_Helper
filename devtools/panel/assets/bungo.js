@@ -213,6 +213,8 @@ function letter_time_countdown() {
 
 /* 文豪状态倒计时 */
 function bungo_status_countdown() {
+  if (bungo_app.bungos == null) return ;
+
   for (var i = 0; i < bungo_app.bungos.length; i++) {
     if (bungo_app.bungos[i].status != BUNGO_STATUS.leisure) {
       if (bungo_app.bungos[i].status_countdown > 0) {
@@ -368,8 +370,9 @@ function show_deck(con) {
       for (var i = 0; i < bungo_app.bungos.length; i++) {
         if (con.decks[d].units[m].id == bungo_app.bungos[i].id) {
           // 只有在队伍中时文豪的疲劳才是显示正确的，所以进行更新
-          bungo_app.bungos[i].sp = con.decks[d].units[m].sp;
           amem = bungo_app.bungos[i];
+          amem.sp = con.decks[d].units[m].sp;
+          Vue.set(bungo_app.bungos, i, amem);
           break;
         }
       }
@@ -397,7 +400,9 @@ function make_bungo(aunit) {
     level: aunit.level,
     category: master_all_categories[aunit.master.category - 1],
     hp: aunit.hp,
+    hp_status: null,
     fp: aunit.fp,
+    fp_status: null,
     mental: master_all_mentals[aunit.master.mental - 1],
     sp: aunit.sp,
     //sp: 0,
@@ -409,6 +414,8 @@ function make_bungo(aunit) {
     status_show: null
   };
   amem.status_show = bungo_all_statuses[amem.status];
+  amem.hp_status = amem.hp >= 20 ? "" : (amem.hp >= 10 ? "warning" : "danger");
+  amem.fp_status = amem.fp < 100 ? "warning" : "";
   return amem;
 }
 
@@ -416,11 +423,6 @@ function make_bungo(aunit) {
 function show_bungos(con) {
   // 更新header信息
   update_header_info(con.header);
-
-  // 当所有文豪信息已经存在时，不进行信息更新
-  if (bungo_app.bungos != null && bungo_app.bungos.length == con.units.length) {
-    return;
-  }
 
   // 第一次进入结成界面时，进行所有文豪信息更新
   if (bungo_app.bungos == null) {
@@ -430,33 +432,26 @@ function show_bungos(con) {
       bungos_data.push(amem);
     }
     bungo_app.bungos = bungos_data;
-  // 获得一个新的文豪或者绝笔（？）之后，进行文豪信息更新
-  } else if (bungo_app.bungos.length != con.units.length) {
+  // 其他情况，当问好状态不同时，更新状态信息
+  } else {
     var bungos_data = [];
     for (var d in con.units) {
       var find_bungo = false;
-
-      // 看文豪是否已经在列表里，如果在就直接复制信息
+      // 看文豪是否已经在列表里，如果在就比较信息
       for (var i = 0; i < bungo_app.bungos.length; i++) {
         if (bungo_app.bungos[i].id == con.units[d].id) {
           var bungo_current_status = con.units[d].is_repair ? BUNGO_STATUS.repair : (con.units[d].is_work ? BUNGO_STATUS.work : BUNGO_STATUS.leisure);
-          // 应该不会出现这种情况：当新的文豪状态跟已有的文豪状态不同时，进行覆盖
-          if (bungo_current_status != bungo_app.bungos[i]) {
-            bungo_app.bungos[i].status = bungo_current_status;
-            bungo_app.bungos[i].status_no = -1;
-            bungo_app.bungos[i].status_countdown = -1;
-            bungo_app.bungos[i].status_show = bungo_all_statuses[bungo_current_status];
+          // 仅当文豪状态相同时不需要创建新文豪
+          if (bungo_current_status == bungo_app.bungos[i].status) {
+            bungos_data.push(bungo_app.bungos[i]);
+            find_bungo = true;
+            break;
           }
-          bungos_data.push(bungo_app.bungos[i]);
-          find_bungo = true;
-          break;
         }
       }
 
-      // 如果是新文豪就新创建一个文豪信息
+      // 创建一个新文豪（更新文豪的所有状态信息）
       if (!find_bungo) {
-        var ne = parseInt(con.units[d].next_level_exp) - parseInt(con.units[d].exp);
-        ne = ne > 0 ? ne : 0; // 满级经验是负数
         var amem = make_bungo(con.units[d]);
         bungos_data.push(amem);
       }
@@ -493,18 +488,26 @@ function update_bungo(id, item, value) {
   // 更新文豪信息
   for (var i = 0; i < bungo_app.bungos.length; i++) {
     if (bungo_app.bungos[i].id == id) {
-      bungo_app.bungos[i][item] = value;
+      var abungo = bungo_app.bungos[i];
+      abungo[item] = value;
+      abungo.hp_status = abungo.hp >= 20 ? "" : (abungo.hp >= 10 ? "warning" : "danger");
+      abungo.fp_status = abungo.fp < 100 ? "warning" : "";
+      Vue.set(bungo_app.bungos, i, abungo);
       break; // 因为拥有的文豪不会重复
     }
   }
   // 更新队伍信息
   for (var i = 0; i < team_app.teams.length; i++) {
-    for (var j = 0; j < team_app.teams[i].members.length; j++) {
-      if (team_app.teams[i].members[j].id == id) {
-        team_app.teams[i].members[j][item] = value;
+    var ateam = team_app.teams[i];
+    for (var j = 0; j < ateam.members.length; j++) {
+      if (ateam.members[j].id == id) {
+        ateam.members[j][item] = value;
+        ateam.members[j].hp_status = ateam.members[j].hp >= 20 ? "" : (ateam.members[j].hp >= 10 ? "warning" : "danger");
+        ateam.members[j].fp_status = ateam.members[j].fp < 100 ? "warning" : "";
         break; // 因为一个队伍里不会有相同的文豪
       }
     }
+    Vue.set(team_app.teams, i, ateam);
   }
 }
 
@@ -549,8 +552,19 @@ function update_info_supply(con) {
   update_header_info(con.header);
 
   // 更新文豪信息
-  for (var d in con.units) {
-    update_bungo(con.units[d].id, 'fp', con.units[d].fp);
+  for (var i = 0; i < bungo_app.bungos.length; i++) {
+    var is_supply = false;
+    for (var d in con.units) {
+      if (con.units[d].id == bungo_app.bungos[i].id) {
+        update_bungo(con.units[d].id, 'fp', con.units[d].fp);
+        is_supply = true;
+        break;
+      }
+    }
+    // 其他情况下，一律设置为100，奇葩bug
+    if (!is_supply) {
+      update_bungo(bungo_app.bungos[i].id, 'fp', 100);
+    }
   }
 }
 
@@ -600,7 +614,7 @@ function update_info_workspaces(con) {
           break;
         }
       }
-      // 如果不存在，更新log信息
+      // 如果不存在，更新log信息，否则不需要操作
       if (!log_exist) {
         // 如果进入workspaces的时候已经有文豪在潜书了
         var alog = {
