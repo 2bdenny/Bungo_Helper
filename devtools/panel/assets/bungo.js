@@ -248,6 +248,8 @@ function bungo_status_countdown() {
     } else {
       cur_bungo.status_show = null;
     }
+
+    Vue.set(bungo_app.bungos, i, cur_bungo);
   }
 }
 
@@ -376,7 +378,7 @@ function show_deck(con) {
       if (!con.decks[d].units[m]) continue;
       // 从所有文豪信息中直接获取队伍中文豪的信息
       var amem = null;
-      for (var i = 0; i < bungo_app.bungos.length; i++) {
+      for (var i in bungo_app.bungos) {
         if (con.decks[d].units[m].id == bungo_app.bungos[i].id) {
           // 只有在队伍中时文豪的疲劳才是显示正确的，所以进行更新
           amem = bungo_app.bungos[i];
@@ -447,7 +449,7 @@ function show_bungos(con) {
     for (var d in con.units) {
       var find_bungo = false;
       // 看文豪是否已经在列表里，如果在就比较信息
-      for (var i = 0; i < bungo_app.bungos.length; i++) {
+      for (var i in bungo_app.bungos) {
         if (bungo_app.bungos[i].id == con.units[d].id) {
           var bungo_current_status = con.units[d].is_repair ? BUNGO_STATUS.repair : (con.units[d].is_work ? BUNGO_STATUS.work : BUNGO_STATUS.leisure);
           // 仅当文豪状态相同时不需要创建新文豪
@@ -566,7 +568,7 @@ function update_info_supply(con) {
   update_header_info(con.header);
 
   // 更新文豪信息
-  for (var i = 0; i < bungo_app.bungos.length; i++) {
+  for (var i in bungo_app.bungos) {
     var is_supply = false;
     for (var d in con.units) {
       if (con.units[d].id == bungo_app.bungos[i].id) {
@@ -601,7 +603,7 @@ function update_info_repair_docks(con) {
 /* 使用加速机进行补修时立刻更新信息 */
 function update_info_repair_force_finish(con) {
   var bungo_id = -1;
-  for (var i = 0; i < bungo_app.bungos.length; i++) {
+  for (var i in bungo_app.bungos) {
     if (bungo_app.bungos[i].status_no == con.finish) {
       bungo_id = bungo_app.bungos[i].id;
       break;
@@ -625,7 +627,7 @@ function update_info_workspaces(con) {
 
       // 更新log信息
       var log_exist = false;
-      for (var i = 0; i < build_log_app.logs.length; i++) {
+      for (var i in build_log_app.logs) {
         if (build_log_app.logs[i].status_no == con.workspaces[d].id) {
           log_exist = true;
           break;
@@ -673,7 +675,7 @@ function update_info_work_finish(url, con) {
   // 更新文豪信息
   var sn = parseInt(url.match(/.*workspaces\/(\d+)\/.*$/)[1]);
   var leader_id = -1;
-  for (var i = 0; i < bungo_app.bungos.length; i++) {
+  for (var i in bungo_app.bungos) {
     if (bungo_app.bungos[i].status_no == sn) {
       leader_id = bungo_app.bungos[i].id;
     }
@@ -684,7 +686,7 @@ function update_info_work_finish(url, con) {
   update_bungo(leader_id, 'status_show', null);
 
   // 更新潜书记录
-  for (var i = 0; i < build_log_app.logs.length; i++) {
+  for (var i in build_log_app.logs) {
     if (build_log_app.logs[i].status_no == sn) {
       var alog = build_log_app.logs[i];
       alog.status_no = -1;
