@@ -11,10 +11,10 @@ var master_all_mentals = [ '安定', '丫丫安定', '普通', '丫丫不安定'
 var master_all_categories = [ '刃', '弓', '铳', '鞭' ];
 
 // 所有战斗结果
-var battle_all_results = ['优', '良', '可', '不'];
+var battle_all_results = [ '优', '良', '可', '不' ];
 
 // 文豪的所有状态
-var bungo_all_statuses = ['', '潜书', '补修'];
+var bungo_all_statuses = [ '', '潜书', '补修' ];
 var BUNGO_STATUS = {
   leisure: 0,
   work: 1,
@@ -27,6 +27,1056 @@ var bungo_hp_statuses = {
 var bungo_fp_statuses = {
   full: 100
 };
+
+// 以下信息跟开花相关
+// 10种材料的列表
+var material_names = [ '文魂(小)', '文魂(中)', '文魂(大)', '想魂(小)', '想魂(中)', '想魂(大)', '語魂(小)', '語魂(中)', '語魂(大)', '魂ノ歯車' ];
+// road-map，按照 '刃', '弓', '铳', '鞭' 的顺序排列
+var bungo_roadmaps = [
+  {
+    "1": {
+      "level": 0,
+      "materials": [{
+        "num": 5,
+        "id": 1
+      }]
+    },
+    "2": {
+      "level": 0,
+      "materials": [{
+        "num": 10,
+        "id": 7
+      }]
+    },
+    "3": {
+      "level": 0,
+      "materials": [{
+        "num": 10,
+        "id": 4
+      }]
+    },
+    "4": {
+      "level": 0,
+      "materials": [{
+        "num": 10,
+        "id": 4
+      }]
+    },
+    "5": {
+      "level": 8,
+      "materials": [{
+        "num": 40,
+        "id": 7
+      }, {
+        "num": 4,
+        "id": 8
+      }, {
+        "num": 1,
+        "id": 10
+      }]
+    },
+    "6": {
+      "level": 0,
+      "materials": [{
+        "num": 120,
+        "id": 4
+      }, {
+        "num": 10,
+        "id": 5
+      }]
+    },
+    "7": {
+      "level": 0,
+      "materials": [{
+        "num": 200,
+        "id": 1
+      }, {
+        "num": 20,
+        "id": 2
+      }, {
+        "num": 1,
+        "id": 3
+      }, {
+        "num": 1,
+        "id": 10
+      }]
+    },
+    "8": {
+      "level": 0,
+      "materials": [{
+        "num": 120,
+        "id": 4
+      }, {
+        "num": 10,
+        "id": 5
+      }]
+    },
+    "9": {
+      "level": 0,
+      "materials": [{
+        "num": 200,
+        "id": 7
+      }, {
+        "num": 20,
+        "id": 8
+      }, {
+        "num": 1,
+        "id": 9
+      }]
+    },
+    "10": {
+      "level": 0,
+      "materials": [{
+        "num": 200,
+        "id": 7
+      }, {
+        "num": 20,
+        "id": 8
+      }]
+    },
+    "11": {
+      "level": 20,
+      "materials": [{
+        "num": 400,
+        "id": 1
+      }, {
+        "num": 40,
+        "id": 2
+      }, {
+        "num": 2,
+        "id": 3
+      }, {
+        "num": 10,
+        "id": 10
+      }]
+    },
+    "12": {
+      "level": 0,
+      "materials": [{
+        "num": 400,
+        "id": 4
+      }, {
+        "num": 40,
+        "id": 5
+      }, {
+        "num": 2,
+        "id": 6
+      }]
+    },
+    "13": {
+      "level": 0,
+      "materials": [{
+        "num": 100,
+        "id": 1
+      }, {
+        "num": 20,
+        "id": 2
+      }, {
+        "num": 1,
+        "id": 3
+      }, {
+        "num": 10,
+        "id": 10
+      }]
+    },
+    "14": {
+      "level": 0,
+      "materials": [{
+        "num": 800,
+        "id": 7
+      }, {
+        "num": 80,
+        "id": 8
+      }, {
+        "num": 1,
+        "id": 9
+      }]
+    },
+    "15": {
+      "level": 0,
+      "materials": [{
+        "num": 400,
+        "id": 4
+      }, {
+        "num": 40,
+        "id": 5
+      }, {
+        "num": 2,
+        "id": 6
+      }]
+    },
+    "16": {
+      "level": 0,
+      "materials": [{
+        "num": 800,
+        "id": 7
+      }, {
+        "num": 80,
+        "id": 8
+      }, {
+        "num": 1,
+        "id": 9
+      }]
+    },
+    "17": {
+      "level": 35,
+      "materials": [{
+        "num": 2000,
+        "id": 4
+      }, {
+        "num": 200,
+        "id": 5
+      }, {
+        "num": 4,
+        "id": 6
+      }, {
+        "num": 10,
+        "id": 10
+      }]
+    },
+    "18": {
+      "level": 0,
+      "materials": [{
+        "num": 1000,
+        "id": 1
+      }, {
+        "num": 100,
+        "id": 2
+      }, {
+        "num": 10,
+        "id": 3
+      }, {
+        "num": 10,
+        "id": 10
+      }]
+    },
+    "19": {
+      "level": 0,
+      "materials": [{
+        "num": 2000,
+        "id": 7
+      }, {
+        "num": 200,
+        "id": 8
+      }, {
+        "num": 5,
+        "id": 9
+      }, {
+        "num": 10,
+        "id": 10
+      }]
+    },
+    "20": {
+      "level": 0,
+      "materials": [{
+        "num": 2000,
+        "id": 1
+      }, {
+        "num": 200,
+        "id": 2
+      }, {
+        "num": 10,
+        "id": 3
+      }, {
+        "num": 20,
+        "id": 10
+      }]
+    }
+  }
+  ,
+  {
+		"1": {
+			"level": 0,
+			"materials": [{
+					"num": 5,
+					"id": 1
+				}
+			]		},
+		"2": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 7
+				}
+			]		},
+		"3": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 4
+				}
+			]		},
+		"4": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 4
+				}
+			]		},
+		"5": {
+			"level": 8,
+			"materials": [{
+					"num": 40,
+					"id": 7
+				}, {
+					"num": 4,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 10
+				}
+			]		},
+		"6": {
+			"level": 0,
+			"materials": [{
+					"num": 120,
+					"id": 4
+				}, {
+					"num": 10,
+					"id": 5
+				}
+			]		},
+		"7": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 1
+				}, {
+					"num": 20,
+					"id": 2
+				}, {
+					"num": 1,
+					"id": 3
+				}, {
+					"num": 1,
+					"id": 10
+				}
+			]		},
+		"8": {
+			"level": 0,
+			"materials": [{
+					"num": 120,
+					"id": 4
+				}, {
+					"num": 10,
+					"id": 5
+				}
+			]		},
+		"9": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 7
+				}, {
+					"num": 20,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]		},
+		"10": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 7
+				}, {
+					"num": 20,
+					"id": 8
+				}
+			]		},
+		"11": {
+			"level": 20,
+			"materials": [{
+					"num": 400,
+					"id": 1
+				}, {
+					"num": 40,
+					"id": 2
+				}, {
+					"num": 2,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]		},
+		"12": {
+			"level": 0,
+			"materials": [{
+					"num": 400,
+					"id": 4
+				}, {
+					"num": 40,
+					"id": 5
+				}, {
+					"num": 2,
+					"id": 6
+				}
+			]		},
+		"13": {
+			"level": 0,
+			"materials": [{
+					"num": 100,
+					"id": 1
+				}, {
+					"num": 20,
+					"id": 2
+				}, {
+					"num": 1,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]		},
+		"14": {
+			"level": 0,
+			"materials": [{
+					"num": 800,
+					"id": 7
+				}, {
+					"num": 80,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]		},
+		"15": {
+			"level": 0,
+			"materials": [{
+					"num": 400,
+					"id": 4
+				}, {
+					"num": 40,
+					"id": 5
+				}, {
+					"num": 2,
+					"id": 6
+				}
+			]		},
+		"16": {
+			"level": 0,
+			"materials": [{
+					"num": 800,
+					"id": 7
+				}, {
+					"num": 80,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]		},
+		"17": {
+			"level": 35,
+			"materials": [{
+					"num": 2000,
+					"id": 4
+				}, {
+					"num": 200,
+					"id": 5
+				}, {
+					"num": 4,
+					"id": 6
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]		},
+		"18": {
+			"level": 0,
+			"materials": [{
+					"num": 1000,
+					"id": 1
+				}, {
+					"num": 100,
+					"id": 2
+				}, {
+					"num": 10,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]		},
+		"19": {
+			"level": 0,
+			"materials": [{
+					"num": 2000,
+					"id": 7
+				}, {
+					"num": 200,
+					"id": 8
+				}, {
+					"num": 5,
+					"id": 9
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]		},
+		"20": {
+			"level": 0,
+			"materials": [{
+					"num": 2000,
+					"id": 1
+				}, {
+					"num": 200,
+					"id": 2
+				}, {
+					"num": 10,
+					"id": 3
+				}, {
+					"num": 20,
+					"id": 10
+				}
+			]		}
+	}
+  ,
+  {
+		"1": {
+			"level": 0,
+			"materials": [{
+					"num": 5,
+					"id": 1
+				}
+			]
+		},
+		"2": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 7
+				}
+			]
+		},
+		"3": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 4
+				}
+			]
+		},
+		"4": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 4
+				}
+			]
+		},
+		"5": {
+			"level": 8,
+			"materials": [{
+					"num": 40,
+					"id": 7
+				}, {
+					"num": 4,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 10
+				}
+			]
+		},
+		"6": {
+			"level": 0,
+			"materials": [{
+					"num": 120,
+					"id": 4
+				}, {
+					"num": 10,
+					"id": 5
+				}
+			]
+		},
+		"7": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 1
+				}, {
+					"num": 20,
+					"id": 2
+				}, {
+					"num": 1,
+					"id": 3
+				}, {
+					"num": 1,
+					"id": 10
+				}
+			]
+		},
+		"8": {
+			"level": 0,
+			"materials": [{
+					"num": 120,
+					"id": 4
+				}, {
+					"num": 10,
+					"id": 5
+				}
+			]
+		},
+		"9": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 7
+				}, {
+					"num": 20,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]
+		},
+		"10": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 7
+				}, {
+					"num": 20,
+					"id": 8
+				}
+			]
+		},
+		"11": {
+			"level": 20,
+			"materials": [{
+					"num": 400,
+					"id": 1
+				}, {
+					"num": 40,
+					"id": 2
+				}, {
+					"num": 2,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"12": {
+			"level": 0,
+			"materials": [{
+					"num": 400,
+					"id": 4
+				}, {
+					"num": 40,
+					"id": 5
+				}, {
+					"num": 2,
+					"id": 6
+				}
+			]
+		},
+		"13": {
+			"level": 0,
+			"materials": [{
+					"num": 100,
+					"id": 1
+				}, {
+					"num": 20,
+					"id": 2
+				}, {
+					"num": 1,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"14": {
+			"level": 0,
+			"materials": [{
+					"num": 800,
+					"id": 7
+				}, {
+					"num": 80,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]
+		},
+		"15": {
+			"level": 0,
+			"materials": [{
+					"num": 400,
+					"id": 4
+				}, {
+					"num": 40,
+					"id": 5
+				}, {
+					"num": 2,
+					"id": 6
+				}
+			]
+		},
+		"16": {
+			"level": 0,
+			"materials": [{
+					"num": 800,
+					"id": 7
+				}, {
+					"num": 80,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]
+		},
+		"17": {
+			"level": 35,
+			"materials": [{
+					"num": 2000,
+					"id": 4
+				}, {
+					"num": 200,
+					"id": 5
+				}, {
+					"num": 4,
+					"id": 6
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"18": {
+			"level": 0,
+			"materials": [{
+					"num": 1000,
+					"id": 1
+				}, {
+					"num": 100,
+					"id": 2
+				}, {
+					"num": 10,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"19": {
+			"level": 0,
+			"materials": [{
+					"num": 2000,
+					"id": 7
+				}, {
+					"num": 200,
+					"id": 8
+				}, {
+					"num": 5,
+					"id": 9
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"20": {
+			"level": 0,
+			"materials": [{
+					"num": 2000,
+					"id": 1
+				}, {
+					"num": 200,
+					"id": 2
+				}, {
+					"num": 10,
+					"id": 3
+				}, {
+					"num": 20,
+					"id": 10
+				}
+			]
+		}
+	}
+  ,
+  {
+		"1": {
+			"level": 0,
+			"materials": [{
+					"num": 5,
+					"id": 1
+				}
+			]
+		},
+		"2": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 7
+				}
+			]
+		},
+		"3": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 4
+				}
+			]
+		},
+		"4": {
+			"level": 0,
+			"materials": [{
+					"num": 10,
+					"id": 4
+				}
+			]
+		},
+		"5": {
+			"level": 8,
+			"materials": [{
+					"num": 40,
+					"id": 7
+				}, {
+					"num": 4,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 10
+				}
+			]
+		},
+		"6": {
+			"level": 0,
+			"materials": [{
+					"num": 120,
+					"id": 4
+				}, {
+					"num": 10,
+					"id": 5
+				}
+			]
+		},
+		"7": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 1
+				}, {
+					"num": 20,
+					"id": 2
+				}, {
+					"num": 1,
+					"id": 3
+				}, {
+					"num": 1,
+					"id": 10
+				}
+			]
+		},
+		"8": {
+			"level": 0,
+			"materials": [{
+					"num": 120,
+					"id": 4
+				}, {
+					"num": 10,
+					"id": 5
+				}
+			]
+		},
+		"9": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 7
+				}, {
+					"num": 20,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]
+		},
+		"10": {
+			"level": 0,
+			"materials": [{
+					"num": 200,
+					"id": 7
+				}, {
+					"num": 20,
+					"id": 8
+				}
+			]
+		},
+		"11": {
+			"level": 20,
+			"materials": [{
+					"num": 400,
+					"id": 1
+				}, {
+					"num": 40,
+					"id": 2
+				}, {
+					"num": 2,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"12": {
+			"level": 0,
+			"materials": [{
+					"num": 400,
+					"id": 4
+				}, {
+					"num": 40,
+					"id": 5
+				}, {
+					"num": 2,
+					"id": 6
+				}
+			]
+		},
+		"13": {
+			"level": 0,
+			"materials": [{
+					"num": 100,
+					"id": 1
+				}, {
+					"num": 20,
+					"id": 2
+				}, {
+					"num": 1,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"14": {
+			"level": 0,
+			"materials": [{
+					"num": 800,
+					"id": 7
+				}, {
+					"num": 80,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]
+		},
+		"15": {
+			"level": 0,
+			"materials": [{
+					"num": 400,
+					"id": 4
+				}, {
+					"num": 40,
+					"id": 5
+				}, {
+					"num": 2,
+					"id": 6
+				}
+			]
+		},
+		"16": {
+			"level": 0,
+			"materials": [{
+					"num": 800,
+					"id": 7
+				}, {
+					"num": 80,
+					"id": 8
+				}, {
+					"num": 1,
+					"id": 9
+				}
+			]
+		},
+		"17": {
+			"level": 35,
+			"materials": [{
+					"num": 2000,
+					"id": 4
+				}, {
+					"num": 200,
+					"id": 5
+				}, {
+					"num": 4,
+					"id": 6
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"18": {
+			"level": 0,
+			"materials": [{
+					"num": 1000,
+					"id": 1
+				}, {
+					"num": 100,
+					"id": 2
+				}, {
+					"num": 10,
+					"id": 3
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"19": {
+			"level": 0,
+			"materials": [{
+					"num": 2000,
+					"id": 7
+				}, {
+					"num": 200,
+					"id": 8
+				}, {
+					"num": 5,
+					"id": 9
+				}, {
+					"num": 10,
+					"id": 10
+				}
+			]
+		},
+		"20": {
+			"level": 0,
+			"materials": [{
+					"num": 2000,
+					"id": 1
+				}, {
+					"num": 200,
+					"id": 2
+				}, {
+					"num": 10,
+					"id": 3
+				}, {
+					"num": 20,
+					"id": 10
+				}
+			]
+		}
+	}}
+];
 
 /* all game status */
 // CURRENT MAX 16
@@ -143,13 +1193,19 @@ window.onload = function() {
   });
 
   /*****************************/
-    /* TEST ONLY */
-    // TEST_ONLY_show_all();
-    // build_log_app.test.push({name: 'hello'});
-    // build_log_app.test.push({name: 'hi'});
-    // build_log_app.test.push({name: 'hex'});
-    // build_log_app.test[1].name = 'yes';
-    // Vue.set(build_log_app.test, 0, {name: 'changed'});
+  /* TEST ONLY */
+  // TEST_ONLY_show_all();
+  // build_log_app.test.push({name: 'hello'});
+  // build_log_app.test.push({name: 'hi'});
+  // build_log_app.test.push({name: 'hex'});
+  // build_log_app.test[1].name = 'yes';
+  // Vue.set(build_log_app.test, 0, {name: 'changed'});
+  // test_app = new Vue({
+  //   el: '#test_info',
+  //   date: {
+  //     tree: null
+  //   }
+  // });
   /*****************************/
 
   /* dispatch data */
@@ -298,6 +1354,12 @@ function route(url) {
   if (/.*mission$/g.test(url)) {
     return GAME_STATUS.mission;
   }
+  if (/.*skill_tree$/g.test(url)) {
+    return GAME_STATUS.skill_tree;
+  }
+  if (/.*skill_tree\/\d+$/g.test(url)) {
+    return GAME_STATUS.skill_tree_one;
+  }
 }
 
 /* show data here */
@@ -329,6 +1391,8 @@ function show_data(url, con, cur_state){
     update_info_work_finish(url, con);
   } else if (con && cur_state == GAME_STATUS.mission) {
     update_info_mission(con);
+  } else if (con && cur_state == GAME_STATUS.skill_tree_one) {
+    update_info_skill_tree_one(url, con);
   } else {
     // 其他情况
   }
@@ -443,7 +1507,7 @@ function show_bungos(con) {
       bungos_data.push(amem);
     }
     bungo_app.bungos = bungos_data;
-  // 其他情况，当问好状态不同时，更新状态信息
+    // 其他情况，当问好状态不同时，更新状态信息
   } else {
     var bungos_data = [];
     for (var d in con.units) {
@@ -700,4 +1764,7 @@ function update_info_work_finish(url, con) {
 /* 完成任务的时候更新资源信息 */
 function update_info_mission(con) {
   update_header_info(con.header);
+}
+
+function update_info_skill_tree_one(url, con) {
 }
