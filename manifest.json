@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Bungo Helper",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A Game Helper for Bungo.",
   "icons": { "128": "assets/icon.png"},
   "background": {

@@ -20,6 +20,13 @@ var BUNGO_STATUS = {
   work: 1,
   repair: 2
 };
+var bungo_hp_statuses = {
+  weak: 20,
+  lost: 10
+};
+var bungo_fp_statuses = {
+  full: 100
+};
 
 /* all game status */
 // CURRENT MAX 16
@@ -215,29 +222,31 @@ function letter_time_countdown() {
 function bungo_status_countdown() {
   if (bungo_app.bungos == null) return ;
 
-  for (var i = 0; i < bungo_app.bungos.length; i++) {
-    if (bungo_app.bungos[i].status != BUNGO_STATUS.leisure) {
-      if (bungo_app.bungos[i].status_countdown > 0) {
+  for (var i in bungo_app.bungos) {
+    var cur_bungo = bungo_app.bungos[i];
+
+    if (cur_bungo.status != BUNGO_STATUS.leisure) {
+      if (cur_bungo.status_countdown > 0) {
         // 倒计时减一
-        var cur_sec = bungo_app.bungos[i].status_countdown - 1;
-        bungo_app.bungos[i].status_countdown = cur_sec;
-        bungo_app.bungos[i].status_show = bungo_all_statuses[bungo_app.bungos[i].status] + ' ' + format_seconds(cur_sec);
-      } else if (bungo_app.bungos[i].status_countdown == 0) {
+        var cur_sec = cur_bungo.status_countdown - 1;
+        cur_bungo.status_countdown = cur_sec;
+        cur_bungo.status_show = bungo_all_statuses[cur_bungo.status] + ' ' + format_seconds(cur_sec);
+      } else if (cur_bungo.status_countdown == 0) {
         // 倒计时等于0的时候更新状态
-        if (bungo_app.bungos[i].status == BUNGO_STATUS.repair) {
+        if (cur_bungo.status == BUNGO_STATUS.repair) {
           // 补修完成时额外更新hp
-          bungo_app.bungos[i].hp = 100;
-          bungo_app.bungos[i].status = BUNGO_STATUS.leisure;
-          bungo_app.bungos[i].status_show = null;
-        } else if (bungo_app.bungos[i].status == BUNGO_STATUS.work) {
+          cur_bungo.hp = 100;
+          cur_bungo.status = BUNGO_STATUS.leisure;
+          cur_bungo.status_show = null;
+        } else if (cur_bungo.status == BUNGO_STATUS.work) {
           // TODO 有魂书潜书完成提醒
         }
-      } else if (team_app.members[j].status_countdown < 0) {
+      } else if (cur_bungo.status_countdown < 0) {
         // 这种情况出现在，有人正在补修但是没有去过补修界面时
-        bungo_app.bungos[i].status_show = bungo_all_statuses[bungo_app.bungos[i].status];
+        cur_bungo.status_show = bungo_all_statuses[cur_bungo.status];
       }
     } else {
-      bungo_app.bungos[i].status_show = null;
+      cur_bungo.status_show = null;
     }
   }
 }
@@ -414,8 +423,8 @@ function make_bungo(aunit) {
     status_show: null
   };
   amem.status_show = bungo_all_statuses[amem.status];
-  amem.hp_status = amem.hp >= 20 ? "" : (amem.hp >= 10 ? "warning" : "danger");
-  amem.fp_status = amem.fp < 100 ? "warning" : "";
+  amem.hp_status = amem.hp >= bungo_hp_statuses.weak ? "" : (amem.hp >= bungo_hp_statuses.lost ? "warning" : "danger");
+  amem.fp_status = amem.fp < bungo_fp_statuses.full ? "warning" : "";
   return amem;
 }
 
@@ -486,28 +495,33 @@ function update_info_battle(con) {
 /* 在这里更新bungos_data和team_data */
 function update_bungo(id, item, value) {
   // 更新文豪信息
-  for (var i = 0; i < bungo_app.bungos.length; i++) {
+  for (var i in bungo_app.bungos) {
     if (bungo_app.bungos[i].id == id) {
       var abungo = bungo_app.bungos[i];
       abungo[item] = value;
-      abungo.hp_status = abungo.hp >= 20 ? "" : (abungo.hp >= 10 ? "warning" : "danger");
-      abungo.fp_status = abungo.fp < 100 ? "warning" : "";
+      abungo.hp_status = abungo.hp >= bungo_hp_statuses.weak ? "" : (abungo.hp >= bungo_hp_statuses.lost ? "warning" : "danger");
+      abungo.fp_status = abungo.fp < bungo_fp_statuses.full ? "warning" : "";
       Vue.set(bungo_app.bungos, i, abungo);
       break; // 因为拥有的文豪不会重复
     }
   }
   // 更新队伍信息
-  for (var i = 0; i < team_app.teams.length; i++) {
+  for (var i in team_app.teams) {
     var ateam = team_app.teams[i];
-    for (var j = 0; j < ateam.members.length; j++) {
+    var changed = false;
+    for (var j in ateam.members.length) {
       if (ateam.members[j].id == id) {
         ateam.members[j][item] = value;
-        ateam.members[j].hp_status = ateam.members[j].hp >= 20 ? "" : (ateam.members[j].hp >= 10 ? "warning" : "danger");
-        ateam.members[j].fp_status = ateam.members[j].fp < 100 ? "warning" : "";
+        ateam.members[j].hp_status = ateam.members[j].hp >= bungo_hp_statuses.weak ? "" : (ateam.members[j].hp >= bungo_hp_statuses.lost ? "warning" : "danger");
+        ateam.members[j].fp_status = ateam.members[j].fp < bungo_fp_statuses.full ? "warning" : "";
+        changed = true;
         break; // 因为一个队伍里不会有相同的文豪
       }
     }
-    Vue.set(team_app.teams, i, ateam);
+    // 仅当队伍里文豪状态被更新过时才进行刷新
+    if(changed) {
+      Vue.set(team_app.teams, i, ateam);
+    }
   }
 }
 
@@ -575,9 +589,12 @@ function update_info_repair_docks(con) {
 
   // 更新文豪（teams和bungos的状态信息）
   for (var d in con.repair_docks) {
-    update_bungo(con.repair_docks[d].unit_id, 'status', BUNGO_STATUS.repair);
-    update_bungo(con.repair_docks[d].unit_id, 'status_no', con.repair_docks[d].id);
-    update_bungo(con.repair_docks[d].unit_id, 'status_countdown', con.repair_docks[d].repair_sec);
+    // 当不是null的时候才更新
+    if (con.repair_docks[d] && con.repair_docks[d].unit_id) {
+      update_bungo(con.repair_docks[d].unit_id, 'status', BUNGO_STATUS.repair);
+      update_bungo(con.repair_docks[d].unit_id, 'status_no', con.repair_docks[d].id);
+      update_bungo(con.repair_docks[d].unit_id, 'status_countdown', con.repair_docks[d].repair_sec);
+    }
   }
 }
 
