@@ -406,7 +406,8 @@ function make_bungo(aunit) {
     status: aunit.is_repair ? BUNGO_STATUS.repair : (aunit.is_work ? BUNGO_STATUS.work : BUNGO_STATUS.leisure),
     status_no: -1,
     status_countdown: -1,
-    status_show: null
+    status_show: null,
+    num_roadmap: aunit.num_roadmap
   };
   amem.status_show = bungo_all_statuses[amem.status];
   amem.hp_status = amem.hp >= bungo_hp_statuses.weak ? "" : (amem.hp >= bungo_hp_statuses.lost ? "warning" : "danger");
