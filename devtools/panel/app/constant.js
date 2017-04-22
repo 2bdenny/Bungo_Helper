@@ -56,7 +56,8 @@ var GAME_STATUS = {
   supply: 18,    // 吃饭
   mission: 19,   // 任务完成时更新资源
   mission_one: 20, // 专门根据任务奖励内是否有"内装金貨"更新res_app（后续其他奖励了//TODO）
-  furniture: 21  // 金币
+  furniture: 21,  // 金币
+  flower_one: 22  // 一个文豪开花了
 };
 
 // 以下信息跟开花相关

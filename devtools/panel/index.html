@@ -24,12 +24,19 @@
         <li id="btn_battle_log_info">有碍书记录</li>
         <li id="btn_build_log_info">有魂書记录</li>
         <li id="btn_egg_info">关于</li>
-        <li id="btn_tip">tip</li>
+        <li id="btn_tip">tip开关</li>
       </ol>
 
       <!-- 这个是资源信息 -->
       <div id="res_info">
-        <b id="tip">去一下结成界面载入文豪和队伍信息；去一下开花树（重点）界面载入开花材料信息；去一下司书室的内装界面载入金币信息；然后就可以正常使用了（大概）。。</b>
+        <div id="tip">
+          <ul>
+            <li>去一下结成界面载入文豪和队伍信息；</li>
+            <li>去一下开花树（重点）界面载入开花材料信息；</li>
+            <li>去一下司书室的内装界面载入金币信息；</li>
+            <li>然后就可以正常使用了（大概）。。</li>
+          </ul>
+        </div>
         <table class="table">
           <!-- 炼金术师信息 -->
           <tr>
@@ -90,7 +97,7 @@
             <td>状态</td>
           </tr>
           <tr v-for="member in team.members">
-            <td>{{ member.name }}</td>
+            <td v-bind:class="[member.flower_status]">{{ member.name }}</td>
             <td>{{ member.category }}</td>
             <td>{{ member.level }}</td>
             <td v-bind:class="[member.hp_status]">{{ member.hp }}</td>
@@ -123,7 +130,7 @@
           </tr>
           </thead>
           <tr v-for="member in bungos">
-            <td>{{ member.name }}</td>
+            <td v-bind:class="[member.flower_status]">{{ member.name }}</td>
             <td>{{ member.category }}</td>
             <td>{{ member.level }}</td>
             <td v-bind:class="[member.hp_status]">{{ member.hp }}</td>
@@ -184,10 +191,12 @@
 
       <div id="egg_info">
         <div>
-          <b>v1.1.1 更新说明</b>
+          <b>v1.1.2 更新说明</b>
           <ol>
             <li>测试发现耗弱和丧失的阈值可能跟疲劳、等级、武器等相关，所以20和10仅做参考Orz</li>
-            <li>修复状态刷新失败的bug，可以显示补修和潜书倒计时（有±5秒的误差），使用加速机时，及时更新状态</li>
+            <li>修复状态刷新失败的bug（Orz），可以显示补修和潜书倒计时（有±5秒的误差）</li>
+            <li>增加开花材料计数</li>
+            <li>增加开花推荐（如果可以开花，名字会变成粉红色。。），会漏推荐</li>
           </ol>
           <b>无法实现的功能</b>
           <ol>

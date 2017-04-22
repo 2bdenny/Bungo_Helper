@@ -267,11 +267,14 @@ function route(url) {
   if (/.*missions\/\d+$/g.test(url)) {
     return GAME_STATUS.mission_one;
   }
-  if (/.*skill_tree$/g.test(url)) {
+  if (/.*page\/skill_tree$/g.test(url)) {
     return GAME_STATUS.skill_tree;
   }
-  if (/.*skill_tree\/\d+$/g.test(url)) {
+  if (/.*page\/skill_tree\/\d+$/g.test(url)) {
     return GAME_STATUS.skill_tree_one;
+  }
+  if (/.*units\/\d+\/skill_tree$/g.test(url)) {
+    return GAME_STATUS.flower_one;
   }
   if (/.*furniture$/g.test(url)) {
     return GAME_STATUS.furniture;
@@ -310,7 +313,9 @@ function show_data(url, con, cur_state){
   } else if (con && cur_state == GAME_STATUS.mission_one) {
     update_info_mission_one(con);
   } else if (con && cur_state == GAME_STATUS.skill_tree_one) {
-    update_info_skill_tree_one(url, con);
+    update_info_skill_tree_one(con);
+  } else if (con && cur_state == GAME_STATUS.flower_one) {
+    update_info_flower_one(con);
   } else if (con && cur_state == GAME_STATUS.furniture) {
     update_info_furniture(con);
   } else {
@@ -393,6 +398,7 @@ function make_bungo(aunit) {
     id: aunit.id,
     name: aunit.master.name,
     level: aunit.level,
+    category_id: aunit.master.category,
     category: master_all_categories[aunit.master.category - 1],
     hp: aunit.hp,
     hp_status: null,
@@ -407,7 +413,8 @@ function make_bungo(aunit) {
     status_no: -1,
     status_countdown: -1,
     status_show: null,
-    num_roadmap: aunit.num_roadmap
+    num_roadmap: aunit.num_roadmap,
+    flower_status: ""
   };
   amem.status_show = bungo_all_statuses[amem.status];
   amem.hp_status = amem.hp >= bungo_hp_statuses.weak ? "" : (amem.hp >= bungo_hp_statuses.lost ? "warning" : "danger");
@@ -539,6 +546,33 @@ function update_info_result(con) {
   battle_log_app.logs.push(alog);
   battle_log_app.nos = battle_log_app.nos + 1;
   current_hexid = 0;
+
+  // 掉落已经有的文豪的时候，更新开花材料信息
+  if (con.hasDropUnit) {
+    for (var i in con.materials) {
+      // 找到res_app中对应的资源，然后更新
+      for (var j in material_names) {
+        if (material_names[j] == con.materials[i].name) {
+          var material = {
+            name: material_names[j],
+            num: res_app.materials[j].num + con.materials[i].num
+          };
+          Vue.set(res_app.materials, j, material);
+          break;
+        }
+      }
+    }
+  }
+  // 固定掉落，更新开花材料信息
+  for (var i in con.dropItems) {
+    var material = {
+      name: material_names[con.dropItems[i].id - 1],
+      num: res_app.materials[con.dropItems[i].id - 1].num + con.dropItems[i].number
+    };
+    Vue.set(res_app.materials, con.dropItems[i].id - 1, material);
+  }
+  // 然后更新所有文豪的开花信息
+  flower_all_bungos();
 }
 
 /* 根据战斗结束时的status更新炼金术师资源信息 */
@@ -697,19 +731,115 @@ function update_info_mission_one(con) {
   }
 }
 
-/* 更新material信息 */
-function update_info_skill_tree_one(url, con) {
-  // 文豪id TODO update bungo flower info
-  var sn = parseInt(url.match(/.*skill_tree\/(\d+)$/)[1]);
-  for (var i = 1; i <= 10; i++) {
-    if (con.materials[i]) {
-      var material = {
-        name: material_names[i-1],
-        num: con.materials[i].num
-      };
-      Vue.set(res_app.materials, i-1, material);
+/* 计算当前文豪是否可以开花 */
+function can_bungo_flower(bungo) {
+  var bungo_roadmap = bungo_roadmaps[bungo.category_id - 1];
+  // 遍历roadmap上所有的node
+  for (var i in bungo_roadmap) {
+    // 当step恰好等于已走的step+1，并且等级条件符合
+    if (bungo_roadmap[i].step == bungo.num_roadmap + 1 && bungo_roadmap[i].level <= bungo.level) {
+      var material_enough = true;
+      for (var j in bungo_roadmap[i].materials) {
+        if (bungo_roadmap[i].materials[j].num > res_app.materials[bungo_roadmap[i].materials[j].id - 1].num) {
+          material_enough = false;
+          break;
+        }
+      }
+      // 且资源也足够时，说明可以开花（充要条件）
+      if (material_enough) {
+        return true;
+      }
     }
   }
+  // 如果一个开花的点都找不到，说明可能不可以开花（为了避免出现判断所有点都可以开花的情况，所以肯定会有漏报）
+  return false;
+}
+
+/* 把所有的文豪开花 */
+function flower_all_bungos() {
+  for (var i in bungo_app.bungos) {
+    var flower = can_bungo_flower(bungo_app.bungos[i]) ? 'flower' : '';
+    update_bungo(bungo_app.bungos[i].id, 'flower_status', flower);
+  }
+}
+
+/* 判断当前node能否开花 */
+function can_node_flower(node) {
+  if (node.level <= bungo.level) {
+    var material_enough = true;
+    for (var j in node.materials) {
+      // 所需材料不够
+      if (node.materials[j].num > res_app.materials[node.materials[j].id - 1].num) {
+        material_enough = false;
+        break;
+      }
+    }
+    // 且资源也足够时，说明可以开花（充要条件）
+    if (material_enough) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/* 根据一个roadmap的信息判断文豪能否开花 */
+function flower_from_roadmap(roadmap) {
+  var flower = '';
+  for (var i in roadmap) {
+    if (roadmap[i].is_clear == false && roadmap[i].is_possible == true && can_node_flower(roadmap[i])) {
+      flower = 'flower';
+      break;
+    }
+  }
+  return flower;
+}
+
+/* 更新material信息 */
+function update_info_skill_tree_one(con) {
+  // 更新资源信息
+  var material_changed = update_materials(con.materials);
+
+  // 然后给所有文豪更新开花信息
+  if (material_changed) {
+    flower_all_bungos();
+  }
+
+  // 最后针对当前文豪更新正确的开花信息
+  var flower = flower_from_roadmap(con.mst_roadmaps);
+  update_bungo(con.unit.id, 'flower_status', flower);
+}
+
+function update_materials(materials) {
+  var material_changed = false;
+  for (var i = 1; i <= 10; i++) {
+    if (materials[i]) {
+      var material = {
+        name: material_names[i-1],
+        num: materials[i].num
+      };
+      if (material.num != res_app.materials[i-1].num) {
+        Vue.set(res_app.materials, i-1, material);
+        material_changed = true;
+      }
+    }
+  }
+  return material_changed;
+}
+
+/* 一个文豪进行了开花 */
+function update_info_flower_one(con) {
+  // 更新当前文豪的num_roadmap
+  update_bungo(con.unit.id, 'num_roadmap', con.unit.num_roadmap);
+
+  // 更新开花资源信息
+  update_materials(con.materials);
+
+  // 更新所有文豪的开花信息
+  flower_all_bungos();
+
+  // 更新当前文豪的开花信息
+  var flower = flower_from_roadmap(con.mst_roadmaps);
+  update_bungo(con.unit.id, 'flower_status', flower);
 }
 
 /* 更新内装金货和许可证信息 */
