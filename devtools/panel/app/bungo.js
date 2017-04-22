@@ -696,7 +696,19 @@ function update_info_mission_one(con) {
   }
 }
 
+/* 更新material信息 */
 function update_info_skill_tree_one(url, con) {
+  // 文豪id TODO update bungo flower info
+  var sn = parseInt(url.match(/.*skill_tree\/(\d+)$/)[1]);
+  for (var i = 1; i <= 10; i++) {
+    if (con.materials[i]) {
+      var material = {
+        name: material_names[i-1],
+        num: con.materials[i].num
+      };
+      Vue.set(res_app.materials, i-1, material);
+    }
+  }
 }
 
 /* 更新内装金货和许可证信息 */
