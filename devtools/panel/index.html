@@ -13,7 +13,8 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="assets/bungo.css">
     <script src="assets/js/vue.min.js"></script>
-    <script src="assets/bungo.js"></script>
+    <script src="app/constant.js"></script>
+    <script src="app/bungo.js"></script>
   </head>
   <body>
     <div class="container">
@@ -21,13 +22,14 @@
         <li id="btn_team_info">队伍信息</li>
         <li id="btn_bungo_info">文豪信息</li>
         <li id="btn_battle_log_info">有碍书记录</li>
-        <li id="btn_build_log_info">有魂书记录</li>
+        <li id="btn_build_log_info">有魂書记录</li>
         <li id="btn_egg_info">关于</li>
+        <li id="btn_tip">tip</li>
       </ol>
 
       <!-- 这个是资源信息 -->
       <div id="res_info">
-        看不到信息的话去一下结成界面再回来。。
+        <b id="tip">去一下结成界面载入文豪和队伍信息；去一下开花树（重点）界面载入开花材料信息；去一下司书室的内装界面载入金币信息；然后就可以正常使用了（大概）。。</b>
         <table class="table">
           <!-- 炼金术师信息 -->
           <tr>
@@ -38,14 +40,34 @@
           </tr>
           <!-- 资源信息 -->
           <tr>
-            <td>墨汁：<span>{{ res_ink }}</span></td>
-            <td>饭团：<span>{{ res_food }}</span></td>
-            <td>有魂书：<span>{{ item_book }}</span></td>
-            <td>加速机：<span>{{ item_quick }}</span></td>
+            <td>洋墨：<span>{{ res_ink }}</span></td>
+            <td>食糧：<span>{{ res_food }}</span></td>
+            <td>有魂書：<span>{{ item_book }}</span></td>
+            <td>調速機：<span>{{ item_quick }}</span></td>
+          </tr>
+
+          <tr>
+            <td>{{ materials[0].name }}:<span>{{ materials[0].num }}</span></td>
+            <td>{{ materials[1].name }}:<span>{{ materials[1].num }}</span></td>
+            <td>{{ materials[2].name }}:<span>{{ materials[2].num }}</span></td>
+            <td class="warning">内装金貨：<span>{{ num_coin }}</span></td>
+          </tr>
+          <tr>
+            <td>{{ materials[3].name }}:<span>{{ materials[3].num }}</span></td>
+            <td>{{ materials[4].name }}:<span>{{ materials[4].num }}</span></td>
+            <td>{{ materials[5].name }}:<span>{{ materials[5].num }}</span></td>
+            <td class="warning">内装许可证：<span>{{ num_license }}</span></td>
+          </tr>
+          <tr>
+            <td>{{ materials[6].name }}:<span>{{ materials[6].num }}</span></td>
+            <td>{{ materials[7].name }}:<span>{{ materials[7].num }}</span></td>
+            <td>{{ materials[8].name }}:<span>{{ materials[8].num }}</span></td>
+            <td>{{ materials[9].name }}:<span>{{ materials[9].num }}</span></td>
           </tr>
           <!-- 信件信息 -->
           <tr>
             <td colspan="2">信件设置：<span>{{ selectedTime }}</span>/<span>{{ selectedItem }}</span></td>
+            <td></td>
             <td colspan="2">信件信息：<span>{{ letter_num }}</span>/2-<span>{{ letter_time }}</span></td>
           </tr>
           <!-- <li class="ad"><a href="http://weibo.com/2bdenny" target="_blank">向凌大大致敬</a></li> -->
@@ -55,9 +77,8 @@
       <!-- 这个是队伍信息 -->
       <div id="team_info">
         <table class="table" v-for="team in teams">
-          <tr><th colspan="9">{{ team.id }}.{{ team.name }}</th></tr>
           <tr class="info">
-            <td>名字</td>
+            <td><b>{{ team.id }}.{{ team.name }}</b></td>
             <td>武器</td>
             <td>等级</td>
             <td>侵蚀</td>
@@ -166,12 +187,7 @@
           <b>v1.1.1 更新说明</b>
           <ol>
             <li>测试发现耗弱和丧失的阈值可能跟疲劳、等级、武器等相关，所以20和10仅做参考Orz</li>
-            <li>增加有魂书潜书记录（也无法导出）</li>
-            <li>吃饭及时更新饱腹度</li>
-            <li>完成任务及时更新资源信息</li>
-            <li>增加状态，可以显示补修和潜书倒计时（有±5秒的误差），使用加速机时，及时更新侵蚀和状态</li>
-            <li>队伍里不再显示精神，仅在所有文豪界面显示</li>
-            <li>仅在队伍里显示疲劳度，因为只有在队伍里的时候才是准确的</li>
+            <li>修复状态刷新失败的bug，可以显示补修和潜书倒计时（有±5秒的误差），使用加速机时，及时更新状态</li>
           </ol>
           <b>无法实现的功能</b>
           <ol>
@@ -182,10 +198,7 @@
         <div>
           <b>其他</b>
           <ol>
-            <li>第一次写chrome扩展，工程结构参考的是<a href="http://weibo.com/moelynn">凌大大</a>的婶婶忙，但是婶婶忙太专业了，代码看不懂Orz。。。所以没有直接fork他的工程而是新开了一个。。。但是还是要感谢他。。。</li>
-            <li>交互界面、各种功能的修改和新增意见<b>请随意提</b>。。不一定能搞出来但会尽量试一下。。</li>
-            <li>更新频率会是。。周末诈尸一下这种。。</li>
-            <li>联系方式的话，可以QQ敲我（如果知道我QQ），也可以在<a href="http://weibo.com/2906583695/ECZt52SAy?from=page_1005052906583695_profile&wvr=6&mod=weibotime&type=comment">微博</a>留言。。不用关注。。请让我继续透明下去。。</li>
+            <li>联系方式：QQ敲我（如果知道我QQ），也可以在<a href="http://weibo.com/2906583695/ECZt52SAy?from=page_1005052906583695_profile&wvr=6&mod=weibotime&type=comment">微博</a>留言。。不用关注。。请让我继续透明下去。。</li>
             <li>GitHub: <a href="https://github.com/2bdenny/Bungo_Helper">Bungo_Helper</a></li>
           </ol>
         </div>
