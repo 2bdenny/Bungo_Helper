@@ -397,6 +397,7 @@ function make_bungo(aunit) {
   var amem = {
     id: aunit.id,
     name: aunit.master.name,
+    flower: [-1, -1, -1],
     level: aunit.level,
     category_id: aunit.master.category,
     category: master_all_categories[aunit.master.category - 1],
@@ -736,8 +737,7 @@ function can_bungo_flower(bungo) {
   var bungo_roadmap = bungo_roadmaps[bungo.category_id - 1];
   // 遍历roadmap上所有的node
   for (var i in bungo_roadmap) {
-    // 当step恰好等于已走的step+1，并且等级条件符合
-    if (bungo_roadmap[i].step == bungo.num_roadmap + 1 && bungo_roadmap[i].level <= bungo.level) {
+    if (bungo_roadmap[i].level <= bungo.level && bungo_roadmap[i].step[0] <= bungo.num_roadmap + 1 && bungo.num_roadmap + 1 <= bungo_roadmap[i].step[1]) {
       var material_enough = true;
       for (var j in bungo_roadmap[i].materials) {
         if (bungo_roadmap[i].materials[j].num > res_app.materials[bungo_roadmap[i].materials[j].id - 1].num) {
@@ -755,11 +755,42 @@ function can_bungo_flower(bungo) {
   return false;
 }
 
+function get_bungo_flower(bungo) {
+  var bungo_roadmap = bungo_roadmaps[bungo.category_id - 1];
+  var nodes = 0;
+  var thresholds = 0;
+  var ranges = 0;
+  // 遍历roadmap上所有的node
+  for (var i in bungo_roadmap) {
+    // 当step恰好等于已走的step+1，并且等级条件符合
+    if (bungo_roadmap[i].level <= bungo.level && bungo_roadmap[i].step[0] <= bungo.num_roadmap + 1 && bungo.num_roadmap + 1 <= bungo_roadmap[i].step[1]) {
+      var material_enough = true;
+      for (var j in bungo_roadmap[i].materials) {
+        if (bungo_roadmap[i].materials[j].num > res_app.materials[bungo_roadmap[i].materials[j].id - 1].num) {
+          material_enough = false;
+          break;
+        }
+      }
+      // 且资源也足够时，说明可以开花（充要条件）
+      if (material_enough) {
+        nodes++;
+        thresholds = thresholds + Math.min(bungo.num_roadmap + 1 - bungo_roadmap[i].step[0], bungo_roadmap[i].step[1] - bungo.num_roadmap - 1);
+        ranges = ranges + bungo_roadmap[i].step[1] - bungo_roadmap[i].step[0];
+      }
+    }
+  }
+  // 开花值的计算
+  //return (thresholds + ranges) / nodes;
+  return [thresholds, ranges, nodes];
+}
+
 /* 把所有的文豪开花 */
 function flower_all_bungos() {
   for (var i in bungo_app.bungos) {
     var flower = can_bungo_flower(bungo_app.bungos[i]) ? 'flower' : '';
+    var flower_value = get_bungo_flower(bungo_app.bungos[i]);
     update_bungo(bungo_app.bungos[i].id, 'flower_status', flower);
+    update_bungo(bungo_app.bungos[i].id, 'flower', flower_value);
   }
 }
 

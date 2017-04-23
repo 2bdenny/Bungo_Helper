@@ -97,6 +97,7 @@
             <td>状态</td>
           </tr>
           <tr v-for="member in team.members">
+            <!-- ({{ member.flower[0] }}, {{ member.flower[1] }}, {{ member.flower[2] }}) -->
             <td v-bind:class="[member.flower_status]">{{ member.name }}</td>
             <td>{{ member.category }}</td>
             <td>{{ member.level }}</td>
@@ -130,6 +131,7 @@
           </tr>
           </thead>
           <tr v-for="member in bungos">
+            <!-- ({{ member.flower[0] }}, {{ member.flower[1] }}, {{ member.flower[2] }}) -->
             <td v-bind:class="[member.flower_status]">{{ member.name }}</td>
             <td>{{ member.category }}</td>
             <td>{{ member.level }}</td>
